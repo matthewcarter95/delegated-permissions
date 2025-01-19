@@ -7,8 +7,8 @@ const defaultAuthConfig = {
 const config = {
   auth: {
     ...defaultAuthConfig,
-    issuer: 'https://demo-red-amphibian-2018.okta.com/oauth2/default',
-    clientId: '0oalnvo5fzOSYBZr4697',
+    issuer: 'https://usps-spa.oktapreview.com/oauth2/default',
+    clientId: '0oajg68zd39t61PoW1d7',
     // audience: ['api://default'],
   },
   app: {
