@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
 import config from '../config.js';
 import jwt from 'jsonwebtoken';
-import { OpenFgaApi } from '@openfga/sdk';
+import { OpenFgaApi, ClientCredentials } from '@openfga/sdk';
 
 export const loadEnv = (options) => {
   if (existsSync('.env.local')) {
@@ -27,22 +27,36 @@ const { auth, server } = config || {};
 
 const {
   SERVER_AUDIENCE: audience = server?.audience ??
-    auth?.audience ??
-    auth?.authorizationParams?.audience ??
-    'api://default',
+  auth?.audience ??
+  auth?.authorizationParams?.audience ??
+  'api://default',
   SERVER_AUTH_PERMISSIONS: AUTH_PERMISSIONS = server?.permissions || [
     'AuthRocks',
   ],
   OPENFGA_API_URL,
   OPENFGA_STORE_ID,
-  OPENFGA_API_TOKEN
+  OPENFGA_API_AUDIENCE,
+  OPENFGA_TOKEN_ISSUER,
+  OPENFGA_CLIENT_ID,
+  OPENFGA_CLIENT_SECRET,
+  OPENFGA_MODEL_ID
 } = process.env;
 
-// Initialize OpenFGA client
+
+
 const fgaClient = new OpenFgaApi({
   apiUrl: OPENFGA_API_URL,
   storeId: OPENFGA_STORE_ID,
-  apiToken: OPENFGA_API_TOKEN
+  authorizationModelId: OPENFGA_MODEL_ID,
+  credentials: {
+    method: ClientCredentials,
+    config: {
+      apiAudience: OPENFGA_API_AUDIENCE,
+      apiTokenIssuer: OPENFGA_TOKEN_ISSUER,
+      clientId: OPENFGA_CLIENT_ID,
+      clientSecret: OPENFGA_CLIENT_SECRET
+    }
+  }
 });
 
 const permissions = Array.isArray(AUTH_PERMISSIONS)
@@ -109,16 +123,18 @@ app.get('/api/scoped', extractToken, checkPermissions, (req, res) =>
 );
 
 // New route to list containedIn relations
-app.get('/api/relations/contained-in', extractToken, checkPermissions, async (req, res) => {
+app.get('/api/relations/contained-in', async (req, res) => {
   try {
     const { roleType = 'role' } = req.query;
-    
-    const response = await fgaClient.read({
-      tupleKey: {
-        object: roleType,
-        relation: "containedIn",
-        user: "permission"
-      }
+
+    const response = await fgaClient.listObjects({
+      user: "role:operator",
+      relation: "containedIn",
+      objecttype: "permission"
+    }, {
+      authorization_model_id: OPENFGA_MODEL_ID,
+
+
     });
 
     res.json({
