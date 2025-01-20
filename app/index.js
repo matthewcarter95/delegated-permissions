@@ -99,17 +99,38 @@ async function loadPermissions() {
     const response = await fetch('/api/permissions');
     const data = await response.json();
 
+    // Process tuples to get permission-role mappings
+    const permissionMap = new Map();
+
+    data.tuples.forEach(tuple => {
+      const { key } = tuple;
+
+      // Only process containedIn relations for permissions
+      if (key.relation === 'containedIn' && key.object.startsWith('permission:')) {
+        const permissionId = key.object.replace('permission:', '');
+        const roleId = key.user.replace('role:', '');
+
+        if (!permissionMap.has(permissionId)) {
+          permissionMap.set(permissionId, new Set());
+        }
+        permissionMap.get(permissionId).add(roleId);
+      }
+    });
+
     const tableBody = document.getElementById('permissions-table-body');
     tableBody.innerHTML = ''; // Clear existing table content
 
-    data.forEach(permission => {
-      const row = tableBody.insertRow();
-      const cell1 = row.insertCell(0);
-      const cell2 = row.insertCell(1);
+    // Convert the map to array and sort by permission ID
+    Array.from(permissionMap.entries())
+      .sort(([permA], [permB]) => permA.localeCompare(permB))
+      .forEach(([permissionId, roles]) => {
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
 
-      cell1.textContent = permission.permissionId;
-      cell2.textContent = permission.roles.map(role => role.roleName).join(', ');
-    });
+        cell1.textContent = permissionId;
+        cell2.textContent = Array.from(roles).sort().join(', ');
+      });
   } catch (error) {
     console.error('Failed to load permissions:', error);
   }

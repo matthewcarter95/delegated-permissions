@@ -38,10 +38,10 @@ const {
   FGA_CLIENT_ID,
   FGA_CLIENT_SECRET,
   FGA_API_URL,
-  OPENFGA_STORE_ID,
-  OPENFGA_CLIENT_ID,
-  OPENFGA_CLIENT_SECRET,
-  OPENFGA_API_URL,
+  OPENFGA_STORE_ID = '01HNB6M5ETZMYN0MVJA2EQDWT7',
+  OPENFGA_CLIENT_ID = 'uezdRJVC8uO7i1CCPIGeFPTWTpS2Rn99',
+  OPENFGA_CLIENT_SECRET = '5HoVOW5vM3u5JWEguW_gCRdv9FjkXGXMpLE7Uu0bB0VN9gkuIp9HF5oxvutMpjD9',
+  OPENFGA_API_URL = 'https://api.us1.fga.dev',
   OPENFGA_API_TOKEN_ISSUER,
   OPENFGA_API_AUDIENCE,
   OPENFGA_MODEL,
@@ -216,16 +216,24 @@ app.get('/api/apps/:appId/roles', async (req, res) => {
 
 // List All Permissions 
 app.get('/api/permissions', async (req, res) => {
-  const roleTuple = {
-    user: 'role:*',
-    relation: 'containedIn',
-    type: 'permission:'
-  };
-
   try {
-    const fgaResponse = await readPermission(roleTuple);
-    console.log(fgaResponse);
-    res.json(fgaResponse.objects);
+    const token = await getBearerToken();
+    const response = await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/read`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!response.data) {
+      throw new Error('No data received from OpenFGA API');
+    }
+
+    res.json(response.data);
   } catch (error) {
     console.error('Permissions API error:', error);
     res.status(500).json({
@@ -261,7 +269,8 @@ app.post('/api/permissions/assign', async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       }
     );
@@ -283,13 +292,16 @@ app.post('/api/permissions/assign', async (req, res) => {
 async function listObjects(userTuple) {
   try {
     const token = await getBearerToken();
-    // console.log(userTuple);
-    const response = await axios.post(`${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/list-objects`,
-      userTuple, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/list-objects`,
+      userTuple,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
     return response.data;
   } catch (error) {
     console.error('Error listing objects:', error);
@@ -301,12 +313,16 @@ async function readPermission(roleTuple) {
   try {
     const token = await getBearerToken();
     console.log(roleTuple);
-    const response = await axios.post(`${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/read`,
-      roleTuple, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/read`,
+      roleTuple,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
     return response.data;
   } catch (error) {
     console.error('Error listing permissions:', error);
