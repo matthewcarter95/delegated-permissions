@@ -13,6 +13,15 @@ const { BASE_URL } = import.meta.env;
 var auth0 = undefined;
 var apiUrl = '/api';
 
+// Initialize Bootstrap modals
+let usersModal;
+let rolesModal;
+
+document.addEventListener('DOMContentLoaded', () => {
+  usersModal = new bootstrap.Modal(document.getElementById('usersModal'));
+  rolesModal = new bootstrap.Modal(document.getElementById('rolesModal'));
+});
+
 /**
  * Calls the API endpoint with an authorization token
  *
@@ -93,6 +102,86 @@ export const router = {
     loadPermissions();
   },
 };
+
+async function viewAppUsers(appId) {
+  try {
+    const response = await fetch(`/api/apps/${appId}/users`);
+    const users = await response.json();
+
+    const modalBody = document.getElementById('users-modal-body');
+    modalBody.innerHTML = '';
+
+    users.forEach(user => {
+      const row = modalBody.insertRow();
+      row.innerHTML = `
+        <td>${user.id}</td>
+        <td>${user.credentials?.userName || user.profile?.login}</td>
+        <td>${user.status}</td>
+      `;
+    });
+
+    usersModal.show();
+  } catch (error) {
+    console.error('Error loading app users:', error);
+    alert('Failed to load application users');
+  }
+}
+
+async function viewAppRoles(appId) {
+  try {
+    const response = await fetch(`/api/apps/${appId}/roles`);
+    const roles = await response.json();
+
+    const modalBody = document.getElementById('roles-modal-body');
+    modalBody.innerHTML = '';
+
+    roles.forEach(role => {
+      const row = modalBody.insertRow();
+      row.innerHTML = `
+        <td>${role.id}</td>
+        <td>${role.name}</td>
+      `;
+    });
+
+    rolesModal.show();
+  } catch (error) {
+    console.error('Error loading app roles:', error);
+    alert('Failed to load application roles');
+  }
+}
+
+async function loadApps() {
+  try {
+    const response = await fetch('/api/apps');
+    const data = await response.json();
+
+    const tableBody = document.getElementById('apps-table-body');
+    tableBody.innerHTML = ''; // Clear existing table content
+
+    data.forEach(app => {
+      const row = tableBody.insertRow();
+      row.innerHTML = `
+        <td>${app.id}</td>
+        <td>${app.label}</td>
+        <td>${app.status}</td>
+        <td>
+          <button onclick="window.viewAppUsers('${app.id}')" class="btn btn-sm btn-info me-2">
+            View Users
+          </button>
+          <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
+            View Roles
+          </button>
+        </td>
+      `;
+    });
+  } catch (error) {
+    console.error('Error loading apps:', error);
+  }
+}
+
+// Make functions available globally for onclick handlers
+window.viewAppUsers = viewAppUsers;
+window.viewAppRoles = viewAppRoles;
 
 async function loadPermissions() {
   try {

@@ -227,7 +227,7 @@
       </div>
     </div>
     <!-- Permissions Page -->
-    <div id="content-permissions" class="page">
+    <div id="content-permissions" class="page hidden">
       <h2 class="mb-4">Permissions Management</h2>
 
       <!-- Create Permission Assignment Form -->
@@ -264,6 +264,79 @@
       </div>
     </div>
     <!--End Permissions Page-->
+
+    <!-- Apps Page -->
+    <div id="content-apps" class="page hidden">
+      <h2 class="mb-4">Applications Management</h2>
+
+      <!-- Apps Table -->
+      <div class="table-responsive">
+        <table id="appsTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="apps-table-body">
+            <!-- Apps will be populated here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal for Users -->
+      <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="usersModalLabel">Application Users</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="users-modal-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Roles -->
+      <div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="rolesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="rolesModalLabel">Application Roles</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Role ID</th>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody id="roles-modal-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Apps Page -->
+
     <footer class="bg-light text-center p-5">
 
     </footer>

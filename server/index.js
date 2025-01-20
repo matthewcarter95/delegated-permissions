@@ -345,4 +345,19 @@ async function getBearerToken() {
   }
 }
 
+async function viewOktaApps() {
+  try {
+    const response = await axios.get(`${OKTA_ORG_URL}/api/v1/apps`, {
+      headers: {
+        Authorization: `SSWS ${OKTA_API_TOKEN}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error getting Okta Apps:', error);
+    throw error;
+  }
+}
 export const handler = app;
