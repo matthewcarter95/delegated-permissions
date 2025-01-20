@@ -202,7 +202,7 @@ app.get('/api/apps/:appId/roles', async (req, res) => {
 
   try {
     const fgaResponse = await listObjects(userTuple);
-    console.log(fgaResponse);
+    console.log(fgaResponse.objects);
     res.json(fgaResponse.objects);
   } catch (error) {
     console.error('App roles API error:', error);
@@ -345,19 +345,4 @@ async function getBearerToken() {
   }
 }
 
-async function viewOktaApps() {
-  try {
-    const response = await axios.get(`${OKTA_ORG_URL}/api/v1/apps`, {
-      headers: {
-        Authorization: `SSWS ${OKTA_API_TOKEN}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error getting Okta Apps:', error);
-    throw error;
-  }
-}
 export const handler = app;

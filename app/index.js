@@ -131,6 +131,7 @@ async function viewAppRoles(appId) {
   try {
     const response = await fetch(`/api/apps/${appId}/roles`);
     const roles = await response.json();
+    console.log("ROLES: ", roles);
 
     const modalBody = document.getElementById('roles-modal-body');
     modalBody.innerHTML = '';
@@ -138,8 +139,7 @@ async function viewAppRoles(appId) {
     roles.forEach(role => {
       const row = modalBody.insertRow();
       row.innerHTML = `
-        <td>${role.id}</td>
-        <td>${role.name}</td>
+        <td>${role}</td>
       `;
     });
 
@@ -161,7 +161,6 @@ async function loadApps() {
     data.forEach(app => {
       const row = tableBody.insertRow();
       row.innerHTML = `
-        <td>${app.id}</td>
         <td>${app.label}</td>
         <td>${app.status}</td>
         <td>
