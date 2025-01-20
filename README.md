@@ -1,4 +1,4 @@
-# Okta CIS devCamp App
+# Okta Delegated Permissions App
 
 This App is delegates permission management for Okta and Fine Grained Authorization (FGA). 
 
