@@ -84,8 +84,36 @@ export const router = {
   '/profile': () =>
     auth0?.requireAuth(() => showContent('content-profile'), '/profile'),
   '/login': () => login(),
+  '/apps': () => {
+    showContent('content-apps');
+    loadApps();
+  },
+  '/permissions': () => {
+    showContent('content-permissions');
+    loadPermissions();
+  },
 };
 
+async function loadPermissions() {
+  try {
+    const response = await fetch('/api/permissions');
+    const data = await response.json();
+
+    const tableBody = document.getElementById('permissions-table-body');
+    tableBody.innerHTML = ''; // Clear existing table content
+
+    data.forEach(permission => {
+      const row = tableBody.insertRow();
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+
+      cell1.textContent = permission.permissionId;
+      cell2.textContent = permission.roles.map(role => role.roleName).join(', ');
+    });
+  } catch (error) {
+    console.error('Failed to load permissions:', error);
+  }
+}
 /**
  * Runs as the default function when the page is initially loaded.
  */
