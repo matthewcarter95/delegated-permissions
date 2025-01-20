@@ -135,6 +135,45 @@ async function loadPermissions() {
     console.error('Failed to load permissions:', error);
   }
 }
+
+// Add event listener for the permission assignment form
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('assignPermissionForm');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const permissionId = document.getElementById('permissionId').value;
+      const roleId = document.getElementById('roleId').value;
+
+      try {
+        const response = await fetch('/api/permissions/assign', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ permissionId, roleId })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to assign permission');
+        }
+
+        // Clear the form
+        form.reset();
+
+        // Reload the permissions table
+        await loadPermissions();
+
+        alert('Permission assigned successfully!');
+      } catch (error) {
+        console.error('Error assigning permission:', error);
+        alert('Failed to assign permission. Please try again.');
+      }
+    });
+  }
+});
+
 /**
  * Runs as the default function when the page is initially loaded.
  */
@@ -151,8 +190,6 @@ export default async () => {
   const loginButton = document.querySelector('#qsLoginBtn');
   const refreshTokensButton = document.querySelector('#qsRefreshTokens');
   const logoutButton = document.querySelector('#qsLogoutBtn');
-  // const publicAPIButton = document.querySelector('#public-api-btn');
-  // const privateAPIButton = document.querySelector('#private-api-btn');
   const scopedAPIButton = document.querySelector('#scoped-api-btn');
 
   loginButton.addEventListener('click', () => auth0.login());
@@ -160,22 +197,6 @@ export default async () => {
   refreshTokensButton.addEventListener('click', () => auth0.refreshTokens());
 
   logoutButton.addEventListener('click', () => auth0.signout());
-
-  // publicAPIButton.addEventListener('click', () =>
-  //   callApi({
-  //     auth0,
-  //     url: window.location.origin + apiUrl + '/public',
-  //     btnId: 'public-api-btn',
-  //   })
-  // );
-
-  // privateAPIButton.addEventListener('click', () =>
-  //   callApi({
-  //     auth0,
-  //     url: window.location.origin + apiUrl + '/private',
-  //     btnId: 'private-api-btn',
-  //   })
-  // );
 
   scopedAPIButton.addEventListener('click', () =>
     callApi({

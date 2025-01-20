@@ -246,7 +246,7 @@ app.get('/api/permissions', async (req, res) => {
 
 app.post('/api/permissions/assign', async (req, res) => {
   const { permissionId, roleId } = req.body;
-
+  console.log('Creating permission:', permissionId, roleId);
   if (!permissionId || !roleId) {
     return res.status(400).json({
       success: false,
@@ -261,9 +261,9 @@ app.post('/api/permissions/assign', async (req, res) => {
       {
         writes: {
           tuple_keys: [{
-            user: `permission:${permissionId}`,
+            user: `role:${roleId}`,
             relation: 'containedIn',
-            object: `role:${roleId}`
+            object: `permission:${permissionId}`
           }]
         }
       },
