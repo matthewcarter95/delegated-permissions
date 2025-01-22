@@ -16,10 +16,15 @@ var apiUrl = "/api";
 // Initialize Bootstrap modals
 let usersModal;
 let rolesModal;
+/** reports modals */
+let userRolesReportModal;
 
 document.addEventListener("DOMContentLoaded", () => {
   usersModal = new bootstrap.Modal(document.getElementById("usersModal"));
   rolesModal = new bootstrap.Modal(document.getElementById("rolesModal"));
+  userRolesReportModal = new bootstrap.Modal(
+    document.getElementById("userRolesReportModal")
+  );
 });
 
 /**
@@ -310,7 +315,9 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        const tableBody = document.getElementById("roles-table-body");
+        const tableBody = document.getElementById(
+          "user-roles-report-table-body"
+        );
         tableBody.innerHTML = ""; // Clear existing table content
 
         // Convert the map to array and sort by userId ID
@@ -324,6 +331,8 @@ document.addEventListener("DOMContentLoaded", () => {
             cell1.textContent = userId;
             cell2.textContent = role;
           });
+
+        userRolesReportModal.show();
       } catch (error) {
         console.error("Error fetching users:", error);
         alert("Failed to fetch users. Please try again.");

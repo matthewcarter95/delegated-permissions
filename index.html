@@ -356,22 +356,31 @@
         </div>
       </div>
 
-      <!-- Roles Table -->
-      <div class="table-responsive">
-        <table id="rolesTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody id="roles-table-body">
-            <!-- Permissions will be populated here -->
-          </tbody>
-        </table>
+      <!-- Modal for User Roles -->
+      <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="userRolesReportModalLabel">Report for Users by Role</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Roles Table -->
+              <table id="rolesTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="user-roles-report-table-body">
+                  <!-- Roles will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!--End Permissions Page-->
     </div>
     <!--End Reports Page-->
 
