@@ -340,16 +340,27 @@
 
     <!-- Reports Page -->
     <div id="content-reports" class="page hidden">
-      <h2 class="mb-4">Reports</h2>
+      <h1 class="mb-4 h2">Reports</h1>
 
       <!-- Get Report Form -->
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">Get Report for Role</h5>
+          <h2 class="card-title h5">User Role Permissions Report</h2>
           <form id="roleReportForm">
             <div class="mb-3">
               <label for="report_roleName" class="form-label">Role Name</label>
               <input type="text" class="form-control" id="report_roleName" name="report_roleName" required>
+            </div>
+          <button type="submit" class="btn btn-primary">Get Report</button>
+          </form>
+        </div>
+      
+        <div class="card-body">
+          <h2 class="card-title h5">User Application Access Report</h2>
+          <form id="appAccessReportForm">
+            <div class="mb-3">
+              <label for="report_appName" class="form-label">Application Name</label>
+              <input type="text" class="form-control" id="report_appName" name="report_appName" required>
             </div>
             <button type="submit" class="btn btn-primary">Get Report</button>
           </form>
@@ -375,6 +386,33 @@
                 </thead>
                 <tbody id="user-roles-report-table-body">
                   <!-- Roles will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Application Access -->
+      <div class="modal fade" id="appAccessReportModal" tabindex="-1" aria-labelledby="appAccessReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="appAccessReportModalLabel">Application Access Report</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Application Access Table -->
+              <table id="appAccessReportTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="app-access-report-table-body">
+                  <!-- Application Access will be populated here -->
                 </tbody>
               </table>
             </div>
