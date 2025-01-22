@@ -104,6 +104,7 @@ export const router = {
   },
   "/reports": () => {
     showContent("content-reports");
+    reportsService.loadApplicationNames();
   },
 };
 

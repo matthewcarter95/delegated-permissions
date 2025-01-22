@@ -15,6 +15,25 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
+async function loadApplicationNames(params) {
+  const response = await fetch("/api/apps");
+  const data = await response.json();
+
+  let appAccessSelect = document.getElementById("report_appName");
+  let appRoleSelect = document.getElementById("report_roleAppId");
+
+  data.forEach((app) => {
+    let opt = document.createElement("option");
+    opt.value = app.id;
+    opt.innerHTML = app.label;
+
+    let optClone = opt.cloneNode(true);
+
+    appAccessSelect.appendChild(opt);
+    appRoleSelect.appendChild(optClone);
+  });
+}
+
 async function loadUserReportByRole(event) {
   event.preventDefault();
 
@@ -126,6 +145,7 @@ async function loadAppRoleAccess(event) {
 }
 
 export const reportsService = {
+  loadApplicationNames,
   loadUserReportByRole,
   loadAppAccessReport,
   loadAppRoleAccess,
