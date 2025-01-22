@@ -103,8 +103,14 @@ export const router = {
     loadPermissions();
   },
   "/reports": () => {
-    showContent("content-reports");
-    reportsService.loadApplicationNames();
+    auth0?.allowRole(
+      () => {
+        showContent("content-reports");
+        reportsService.loadApplicationNames();
+      },
+      "ReportUser",
+      "/reports"
+    );
   },
 };
 
