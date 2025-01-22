@@ -174,6 +174,9 @@ async function loadApps() {
           <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
             View Roles
           </button>
+          <button onclick="window.manageAppPermssions('${app.id}')" class="btn btn-sm btn-primary">
+            Manage Permissions
+          </button>
         </td>
       `;
     });
