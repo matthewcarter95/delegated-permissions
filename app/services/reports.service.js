@@ -2,6 +2,7 @@
 let userRolesReportModal;
 let appAccessReportModal;
 let appRoleReportModal;
+let scheduleDeliveryForms;
 
 document.addEventListener("DOMContentLoaded", () => {
   userRolesReportModal = new bootstrap.Modal(
@@ -13,6 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
   appRoleReportModal = new bootstrap.Modal(
     document.getElementById("appRoleReportModal")
   );
+
+  scheduleDeliveryForms = document.getElementsByClassName(
+    "schedule-delivery-form"
+  );
+  if (scheduleDeliveryForms) {
+    Array.from(scheduleDeliveryForms).forEach((ele) => {
+      ele.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.alert("Success! Report will be delivered on the selected date.");
+      });
+    });
+  }
 });
 
 async function loadApplicationNames(params) {

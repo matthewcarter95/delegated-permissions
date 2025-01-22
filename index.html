@@ -392,7 +392,22 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <button type="button"   class="btn btn-primary" id="download-user-roles-data">Download Table</button>
+              <div class="card-body">
+                <button type="button" class="btn btn-primary mb-3" id="download-user-roles-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label" name="deliveryDate">Delivery Date
+                      <input type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
 
               <!-- Roles Table -->
               <table id="rolesTable" class="table table-striped">
@@ -421,7 +436,23 @@
             </div>
 
             <div class="modal-body">
-              <button type="button"   class="btn btn-primary" id="download-app-access-data">Download Table</button>
+              <div class="card-body">
+                <button type="button"   class="btn btn-primary" id="download-app-access-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label" name="deliveryDate">Delivery Date
+                      <input type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
+
               <!-- Application Access Table -->
               <table id="appAccessReportTable" class="table table-striped">
                 <thead>
@@ -450,7 +481,23 @@
             </div>
 
             <div class="modal-body">
-              <button type="button"   class="btn btn-primary" id="download-app-role-data">Download Table</button>
+              <div class="card-body">
+                <button type="button"   class="btn btn-primary" id="download-app-role-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label" name="deliveryDate">Delivery Date
+                      <input type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
+
               <!-- Application Role Table -->
               <table id="appRoleReportTable" class="table table-striped">
                 <thead>
