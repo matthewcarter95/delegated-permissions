@@ -1,6 +1,7 @@
 /** reports modals */
 let userRolesReportModal;
 let appAccessReportModal;
+let appRoleReportModal;
 
 document.addEventListener("DOMContentLoaded", () => {
   userRolesReportModal = new bootstrap.Modal(
@@ -8,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   appAccessReportModal = new bootstrap.Modal(
     document.getElementById("appAccessReportModal")
+  );
+  appRoleReportModal = new bootstrap.Modal(
+    document.getElementById("appRoleReportModal")
   );
 });
 
@@ -95,4 +99,34 @@ async function loadAppAccessReport(event) {
   }
 }
 
-export const reportsService = { loadUserReportByRole, loadAppAccessReport };
+async function loadAppRoleAccess(event) {
+  event.preventDefault();
+
+  const appId = document.getElementById("report_roleAppId").value;
+
+  try {
+    const response = await fetch(`/api/apps/${appId}/roles`);
+    const roles = await response.json();
+
+    const modalBody = document.getElementById("app-role-report-table-body");
+    modalBody.innerHTML = "";
+
+    roles.forEach((role) => {
+      const row = modalBody.insertRow();
+      row.innerHTML = `
+        <td>${role}</td>
+      `;
+    });
+
+    appRoleReportModal.show();
+  } catch (error) {
+    console.error("Error fetching app access report:", error);
+    alert("Failed to fetch data. Please try again.");
+  }
+}
+
+export const reportsService = {
+  loadUserReportByRole,
+  loadAppAccessReport,
+  loadAppRoleAccess,
+};

@@ -276,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const userRoleForm = document.getElementById("roleReportForm");
   const appAccessReportForm = document.getElementById("appAccessReportForm");
+  const appRoleReportForm = document.getElementById("appRoleReportForm");
   if (userRoleForm) {
     userRoleForm.addEventListener(
       "submit",
@@ -286,6 +287,12 @@ document.addEventListener("DOMContentLoaded", () => {
     appAccessReportForm.addEventListener(
       "submit",
       reportsService.loadAppAccessReport
+    );
+  }
+  if (appRoleReportForm) {
+    appRoleReportForm.addEventListener(
+      "submit",
+      reportsService.loadAppRoleAccess
     );
   }
 });

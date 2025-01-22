@@ -366,6 +366,18 @@
           </form>
         </div>
       </div>
+      
+        <div class="card-body">
+          <h2 class="card-title h5">Application Role Report</h2>
+          <form id="appRoleReportForm">
+            <div class="mb-3">
+              <label for="report_roleAppId" class="form-label">Application Name</label>
+              <input type="text" class="form-control" id="report_roleAppId" name="report_roleAppId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Report</button>
+          </form>
+        </div>
+      </div>
 
       <!-- Modal for User Roles -->
       <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel" aria-hidden="true">
@@ -413,6 +425,31 @@
                 </thead>
                 <tbody id="app-access-report-table-body">
                   <!-- Application Access will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Application Role Report -->
+      <div class="modal fade" id="appRoleReportModal" tabindex="-1" aria-labelledby="appRoleReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="appRoleReportModalLabel">Application Role Report</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Application Role Table -->
+              <table id="appRoleReportTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="app-role-report-table-body">
+                  <!-- Application Role Report will be populated here -->
                 </tbody>
               </table>
             </div>
