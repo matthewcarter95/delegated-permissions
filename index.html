@@ -391,6 +391,7 @@
               <h5 class="modal-title" id="userRolesReportModalLabel">Report for Users by Role</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
               <div class="card-body">
                 <button type="button" class="btn btn-primary mb-3" id="download-user-roles-data">Download Table</button>
@@ -398,11 +399,18 @@
                 <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
                 <form class="schedule-delivery-form">
                   <div class="mb-3">
-                    <label class="form-label" name="deliveryDate">Delivery Date
-                      <input type="date" required>
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
                     </label>
                     <label class="form-label" name="email">Email Address
-                      <input type="email" required>
+                      <input class="form-control" type="email" required>
                     </label>
                   </div>
                   <button type="submit"  class="btn btn-primary">Schedule Report</button>
@@ -437,16 +445,23 @@
 
             <div class="modal-body">
               <div class="card-body">
-                <button type="button"   class="btn btn-primary" id="download-app-access-data">Download Table</button>
+                <button type="button" class="btn btn-primary mb-3" id="download-app-access-data">Download Table</button>
                 
                 <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
                 <form class="schedule-delivery-form">
                   <div class="mb-3">
-                    <label class="form-label" name="deliveryDate">Delivery Date
-                      <input type="date" required>
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
                     </label>
                     <label class="form-label" name="email">Email Address
-                      <input type="email" required>
+                      <input class="form-control" type="email" required>
                     </label>
                   </div>
                   <button type="submit"  class="btn btn-primary">Schedule Report</button>
@@ -482,16 +497,23 @@
 
             <div class="modal-body">
               <div class="card-body">
-                <button type="button"   class="btn btn-primary" id="download-app-role-data">Download Table</button>
+                <button type="button" class="btn btn-primary mb-3" id="download-app-role-data">Download Table</button>
                 
                 <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
                 <form class="schedule-delivery-form">
                   <div class="mb-3">
-                    <label class="form-label" name="deliveryDate">Delivery Date
-                      <input type="date" required>
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
                     </label>
                     <label class="form-label" name="email">Email Address
-                      <input type="email" required>
+                      <input class="form-control" type="email" required>
                     </label>
                   </div>
                   <button type="submit"  class="btn btn-primary">Schedule Report</button>
