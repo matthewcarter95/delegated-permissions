@@ -194,7 +194,7 @@ async function loadPermissions() {
       const { key } = tuple;
 
       // Only process containedIn relations for permissions
-      if (key.relation === 'containedIn' && key.object.startsWith('permission:')) {
+      if (key.relation === 'parent' && key.object.startsWith('permission:')) {
         const permissionId = key.object.replace('permission:', '');
         const roleId = key.user.replace('role:', '');
 

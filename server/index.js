@@ -152,7 +152,7 @@ app.post('/api/organizations', async (req, res) => {
 // Okta Apps API endpoints
 app.get('/api/apps', async (req, res) => {
   try {
-    const response = await axios.get(`${OKTA_ORG_URL}/api/v1/apps`, {
+    const response = await axios.get(`${OKTA_ORG_URL}/api/v1/apps?q=WI`, {
       headers: {
         Authorization: `SSWS ${OKTA_API_TOKEN}`,
         Accept: 'application/json',
@@ -262,7 +262,7 @@ app.post('/api/permissions/assign', async (req, res) => {
         writes: {
           tuple_keys: [{
             user: `role:${roleId}`,
-            relation: 'containedIn',
+            relation: 'parent',
             object: `permission:${permissionId}`
           }]
         }
@@ -332,7 +332,7 @@ async function readPermission(roleTuple) {
 
 async function getBearerToken() {
   try {
-    const response = await axios.post('https://fga.us.auth0.com/oauth/token', {
+    const response = await axios.post('https://auth.fga.dev/oauth/token', {
       client_id: OPENFGA_CLIENT_ID,
       client_secret: OPENFGA_CLIENT_SECRET,
       grant_type: 'client_credentials',
