@@ -39,6 +39,8 @@
               </li>
               <li class="nav-item hidden" id="reports-nav-item">
                 <a href="/reports" class="nav-link route-link">Reports</a>
+              <li class="nav-item">
+                <a href="/organizations" class="nav-link route-link">Organizations</a>
               </li>
             </ul>
             <ul class="navbar-nav auth-invisible d-block">
@@ -272,6 +274,20 @@
     <div id="content-apps" class="page hidden">
       <h2 class="mb-4">Applications Management</h2>
 
+      <!-- Add Application Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Create New Application</h5>
+          <form id="createAppForm">
+            <div class="mb-3">
+              <label for="appName" class="form-label">Application Name</label>
+              <input type="text" class="form-control" id="appName" name="appName" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Application</button>
+          </form>
+        </div>
+      </div>
+
       <!-- Apps Table -->
       <div class="table-responsive">
         <table id="appsTable" class="table table-striped">
@@ -338,6 +354,7 @@
     </div>
     <!-- End Apps Page -->
 
+
     <!-- Reports Page -->
     <div id="content-reports" class="page hidden">
       <h1 class="mb-4 h2">Reports</h1>
@@ -379,9 +396,27 @@
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Get Report</button>
+    <div id="content-organizations" class="page hidden">
+      <h2 class="mb-4">Organizations Management</h2>
+
+      <!-- Add Member Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add Role to Organization</h5>
+          <form id="addMemberForm">
+            <div class="mb-3">
+              <label for="orgId" class="form-label">Organization ID</label>
+              <input type="text" class="form-control" id="orgId" name="orgId" required>
+            </div>
+            <div class="mb-3">
+              <label for="orgRoleId" class="form-label">Role ID</label>
+              <input type="text" class="form-control" id="orgRoleId" name="orgRoleId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Member</button>
           </form>
         </div>
       </div>
+
 
       <!-- Modal for User Roles -->
       <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel" aria-hidden="true">
@@ -538,6 +573,23 @@
       </div>
     </div>
     <!--End Reports Page-->
+
+      <!-- Organizations Table -->
+      <div class="table-responsive">
+        <table id="organizationsTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Organization ID</th>
+              <th>Member Roles</th>
+            </tr>
+          </thead>
+          <tbody id="organizations-table-body">
+            <!-- Organizations will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
     <footer class="bg-light text-center p-5">
 

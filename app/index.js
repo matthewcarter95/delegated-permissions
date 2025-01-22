@@ -102,6 +102,7 @@ export const router = {
     showContent("content-permissions");
     loadPermissions();
   },
+
   "/reports": () => {
     auth0?.allowRole(
       () => {
@@ -112,6 +113,12 @@ export const router = {
       "/reports"
     );
   },
+
+  '/organizations': () => {
+    showContent('content-organizations');
+    loadOrganizations();
+  }
+
 };
 
 /** Applicaitons Page */
@@ -182,6 +189,9 @@ async function loadApps() {
           <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
             View Roles
           </button>
+          <button onclick="window.manageAppPermssions('${app.id}')" class="btn btn-sm btn-primary">
+            Manage Permissions
+          </button>
         </td>
       `;
     });
@@ -193,6 +203,63 @@ async function loadApps() {
 // Make functions available globally for onclick handlers
 window.viewAppUsers = viewAppUsers;
 window.viewAppRoles = viewAppRoles;
+
+async function loadOrganizations() {
+  try {
+    const response = await fetch('/api/permissions');
+    const data = await response.json();
+
+    // Process tuples to get permission-role mappings
+    const orgMap = new Map();
+
+    data.tuples.forEach(tuple => {
+      const { key } = tuple;
+
+      // Only process member relations for organizations
+      if (key.relation === 'member' && key.object.startsWith('org:')) {
+        const orgId = key.object.replace('org:', '');
+        const roleId = key.user.replace('role:', '');
+
+        if (!orgMap.has(orgId)) {
+          orgMap.set(orgId, new Set());
+        }
+        orgMap.get(orgId).add(roleId);
+      }
+    });
+
+    const tableBody = document.getElementById('organizations-table-body');
+    tableBody.innerHTML = ''; // Clear existing table content
+
+    // Convert the map to array and sort by permission ID
+    Array.from(orgMap.entries())
+      .sort(([permA], [permB]) => permA.localeCompare(permB))
+      .forEach(([orgId, roles]) => {
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+
+        cell1.textContent = orgId;
+        cell2.textContent = Array.from(roles).sort().join(', ');
+      });
+  } catch (error) {
+    // try {
+    //   const response = await fetch('/api/organizations/members');
+    //   const data = await response.json();
+
+    //   const tableBody = document.getElementById('organizations-table-body');
+    //   tableBody.innerHTML = '';
+
+    //   data.forEach(org => {
+    //     const row = tableBody.insertRow();
+    //     row.innerHTML = `
+    //       <td>${org.orgId}</td>
+    //       <td>${org.roles.join(', ')}</td>
+    //     `;
+    //   });
+    // } catch (error) {
+    console.error('Error loading organizations:', error);
+  }
+}
 
 async function loadPermissions() {
   try {
@@ -206,12 +273,12 @@ async function loadPermissions() {
       const { key } = tuple;
 
       // Only process containedIn relations for permissions
-      if (
-        key.relation === "containedIn" &&
-        key.object.startsWith("permission:")
-      ) {
-        const permissionId = key.object.replace("permission:", "");
-        const roleId = key.user.replace("role:", "");
+
+
+      if (key.relation === 'parent' && key.object.startsWith('permission:')) {
+        const permissionId = key.object.replace('permission:', '');
+        const roleId = key.user.replace('role:', '');
+
 
         if (!permissionMap.has(permissionId)) {
           permissionMap.set(permissionId, new Set());
@@ -238,6 +305,43 @@ async function loadPermissions() {
     console.error("Failed to load permissions:", error);
   }
 }
+
+// Add add-app form submission handler
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createAppForm');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const appName = document.getElementById('appName').value;
+
+      try {
+        const response = await fetch('/api/apps', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ appName })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create application');
+        }
+
+        // Clear the form
+        form.reset();
+
+        // Reload the applications table
+        await loadApps();
+
+        alert('Application created successfully!');
+      } catch (error) {
+        console.error('Error creating application:', error);
+        alert('Failed to create application. Please try again.');
+      }
+    });
+  }
+});
 
 // Add event listener for the permission assignment form
 document.addEventListener("DOMContentLoaded", () => {
@@ -272,6 +376,43 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error("Error assigning permission:", error);
         alert("Failed to assign permission. Please try again.");
+      }
+    });
+  }
+});
+
+// Add form submission handler for organization members
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('addMemberForm');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const orgId = document.getElementById('orgId').value;
+      const orgRoleId = document.getElementById('orgRoleId').value;
+      try {
+        const response = await fetch('/api/organizations/members', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ orgId, orgRoleId })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add member');
+        }
+
+        // Clear the form
+        form.reset();
+
+        // Reload the organizations table
+        await loadOrganizations();
+
+        alert('Member added successfully!');
+      } catch (error) {
+        console.error('Error adding member:', error);
+        alert('Failed to add member. Please try again.');
       }
     });
   }
