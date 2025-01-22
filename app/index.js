@@ -98,8 +98,14 @@ export const router = {
     showContent("content-apps");
     loadApps();
   },
-  "/permissions": () => {
-    showContent("content-permissions");
+  '/permissions': () => {
+    showContent('content-permissions');
+    // Get appId from URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const appId = urlParams.get('appId');
+    if (appId) {
+      document.getElementById('permissions-title').textContent = `Permission Management for ${appId}`;
+    }
     loadPermissions();
   },
 
@@ -117,6 +123,10 @@ export const router = {
   '/organizations': () => {
     showContent('content-organizations');
     loadOrganizations();
+  },
+  '/actions': () => {
+    showContent('content-actions');
+    loadActions();
   }
 
 };
@@ -189,9 +199,9 @@ async function loadApps() {
           <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
             View Roles
           </button>
-          <button onclick="window.manageAppPermssions('${app.id}')" class="btn btn-sm btn-primary">
+          <a href="/permissions?appId=${app.id}" class="btn btn-sm btn-primary">
             Manage Permissions
-          </button>
+          </a>
         </td>
       `;
     });
@@ -203,6 +213,7 @@ async function loadApps() {
 // Make functions available globally for onclick handlers
 window.viewAppUsers = viewAppUsers;
 window.viewAppRoles = viewAppRoles;
+// window.manageAppPermssions = manageAppPermssions;
 
 async function loadOrganizations() {
   try {
@@ -303,6 +314,48 @@ async function loadPermissions() {
       });
   } catch (error) {
     console.error("Failed to load permissions:", error);
+  }
+}
+
+async function loadActions() {
+  try {
+    const response = await fetch('/api/permissions');
+    const data = await response.json();
+
+    // Process tuples to get permission-role mappings
+    const actionMap = new Map();
+
+    data.tuples.forEach(tuple => {
+      const { key } = tuple;
+
+      // Only process containedIn relations for permissions
+      if (key.relation === 'parent' && key.object.startsWith('action:')) {
+        const actionId = key.object.replace('action:', '');
+        const roleId = key.user.replace('role:', '');
+
+        if (!actionMap.has(actionId)) {
+          actionMap.set(actionId, new Set());
+        }
+        actionMap.get(actionId).add(roleId);
+      }
+    });
+
+    const tableBody = document.getElementById('actions-table-body');
+    tableBody.innerHTML = ''; // Clear existing table content
+
+    // Convert the map to array and sort by permission ID
+    Array.from(actionMap.entries())
+      .sort(([permA], [permB]) => permA.localeCompare(permB))
+      .forEach(([actionId, roles]) => {
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+
+        cell1.textContent = actionId;
+        cell2.textContent = Array.from(roles).sort().join(', ');
+      });
+  } catch (error) {
+    console.error('Failed to load actions:', error);
   }
 }
 

@@ -40,6 +40,9 @@
               <li class="nav-item hidden" id="reports-nav-item">
                 <a href="/reports" class="nav-link route-link">Reports</a>
               <li class="nav-item">
+                <a href="/actions" class="nav-link route-link">Actions</a>
+              </li>
+              <li class="nav-item">
                 <a href="/organizations" class="nav-link route-link">Organizations</a>
               </li>
             </ul>
@@ -233,7 +236,7 @@
     </div>
     <!-- Permissions Page -->
     <div id="content-permissions" class="page hidden">
-      <h2 class="mb-4">Permissions Management</h2>
+      <h2 id="permissions-title" class="mb-4">Permissions Management</h2>
 
       <!-- Create Permission Assignment Form -->
       <div class="card mb-4">
@@ -345,6 +348,7 @@
                   </tr>
                 </thead>
                 <tbody id="roles-modal-body">
+                </tbody>
                 </tbody>
               </table>
             </div>
@@ -590,6 +594,44 @@
       </div>
     </div>
 
+    <!-- Actions Page -->
+    <div id="content-actions" class="page hidden">
+      <h2 class="mb-4">Actions Management</h2>
+
+      <!-- Create Actions-to_role Assignment Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Assign Actions to Role</h5>
+          <form id="assignActionForm">
+            <div class="mb-3">
+              <label for="actionId" class="form-label">Action ID</label>
+              <input type="text" class="form-control" id="actionId" name="actionId" required>
+            </div>
+            <div class="mb-3">
+              <label for="roleId" class="form-label">Role ID</label>
+              <input type="text" class="form-control" id="actionRoleId" name="actionRoleId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Permission</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Actions Table -->
+      <div class="table-responsive">
+        <table id="actionsTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Action ID</th>
+              <th>Contained In Roles</th>
+            </tr>
+          </thead>
+          <tbody id="actions-table-body">
+            <!-- Actions will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--End Permissions Page-->
 
     <footer class="bg-light text-center p-5">
 

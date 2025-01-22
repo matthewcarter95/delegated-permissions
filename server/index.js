@@ -377,7 +377,27 @@ app.post('/api/apps', async (req, res) => {
   }
 });
 
-// List All Permissions 
+app.delete('/api/tuple', async (req, res) => {
+  try {
+    const token = await getBearerToken();
+    const response = await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
+      req.body,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+
+  }
+});
+
+// List All Permissions, actually returns all tuples, need to fix at some point 
 app.get('/api/permissions', async (req, res) => {
   try {
     const token = await getBearerToken();
