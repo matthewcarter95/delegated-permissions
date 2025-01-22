@@ -99,6 +99,12 @@ export const router = {
   },
   '/permissions': () => {
     showContent('content-permissions');
+    // Get appId from URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const appId = urlParams.get('appId');
+    if (appId) {
+      document.getElementById('permissions-title').textContent = `Permission Management for ${appId}`;
+    }
     loadPermissions();
   },
   '/organizations': () => {
@@ -178,9 +184,9 @@ async function loadApps() {
           <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
             View Roles
           </button>
-          <button onclick="window.manageAppPermssions('${app.id}')" class="btn btn-sm btn-primary">
+          <a href="/permissions?appId=${app.id}" class="btn btn-sm btn-primary">
             Manage Permissions
-          </button>
+          </a>
         </td>
       `;
     });
@@ -192,7 +198,7 @@ async function loadApps() {
 // Make functions available globally for onclick handlers
 window.viewAppUsers = viewAppUsers;
 window.viewAppRoles = viewAppRoles;
-window.manageAppPermssions = manageAppPermssions;
+// window.manageAppPermssions = manageAppPermssions;
 
 async function loadOrganizations() {
   try {
