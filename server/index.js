@@ -214,6 +214,73 @@ app.get('/api/apps/:appId/roles', async (req, res) => {
   }
 });
 
+// Create App in Okta
+app.post('/api/apps', async (req, res) => {
+  const { appName } = req.body;
+
+  if (!appName) {
+    return res.status(400).json({
+      success: false,
+      message: 'Application name is required'
+    });
+  }
+
+  try {
+    const response = await axios.post(
+      `${OKTA_ORG_URL}/api/v1/apps`,
+      {
+        name: 'oidc_client',
+        label: appName,
+        signOnMode: 'OPENID_CONNECT',
+        credentials: {
+          oauthClient: {
+            autoKeyRotation: true,
+            token_endpoint_auth_method: 'client_secret_basic'
+          }
+        },
+        settings: {
+          oauthClient: {
+            client_uri: 'http://localhost:3000',
+            logo_uri: null,
+            redirect_uris: [
+              'http://localhost:3000/login/callback'
+            ],
+            post_logout_redirect_uris: [
+              'http://localhost:3000'
+            ],
+            response_types: [
+              'code'
+            ],
+            grant_types: [
+              'authorization_code',
+              'refresh_token'
+            ],
+            application_type: 'web',
+            consent_method: 'REQUIRED',
+            issuer_mode: 'ORG_URL'
+          }
+        }
+      },
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Create application error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create application',
+      error: error.response?.data || error.message
+    });
+  }
+});
+
 // List All Permissions 
 app.get('/api/permissions', async (req, res) => {
   try {

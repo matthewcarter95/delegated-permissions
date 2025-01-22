@@ -224,6 +224,43 @@ async function loadPermissions() {
   }
 }
 
+// Add add-app form submission handler
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createAppForm');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const appName = document.getElementById('appName').value;
+
+      try {
+        const response = await fetch('/api/apps', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ appName })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create application');
+        }
+
+        // Clear the form
+        form.reset();
+
+        // Reload the applications table
+        await loadApps();
+
+        alert('Application created successfully!');
+      } catch (error) {
+        console.error('Error creating application:', error);
+        alert('Failed to create application. Please try again.');
+      }
+    });
+  }
+});
+
 // Add event listener for the permission assignment form
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('assignPermissionForm');
