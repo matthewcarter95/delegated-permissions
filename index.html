@@ -37,6 +37,9 @@
               <li class="nav-item">
                 <a href="/permissions" class="nav-link route-link">Permissions</a>
               </li>
+              <li class="nav-item">
+                <a href="/reports" class="nav-link route-link">Reports</a>
+              </li>
             </ul>
             <ul class="navbar-nav auth-invisible d-block">
               <!-- Login button: show if NOT authenticated -->
@@ -334,6 +337,43 @@
       </div>
     </div>
     <!-- End Apps Page -->
+
+    <!-- Reports Page -->
+    <div id="content-reports" class="page hidden">
+      <h2 class="mb-4">Reports</h2>
+
+      <!-- Get Report Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Get Report for Role</h5>
+          <form id="roleReportForm">
+            <div class="mb-3">
+              <label for="report_roleName" class="form-label">Role Name</label>
+              <input type="text" class="form-control" id="report_roleName" name="report_roleName" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Report</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Roles Table -->
+      <div class="table-responsive">
+        <table id="rolesTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="roles-table-body">
+            <!-- Permissions will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--End Permissions Page-->
+    </div>
+    <!--End Reports Page-->
 
     <footer class="bg-light text-center p-5">
 
