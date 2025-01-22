@@ -104,50 +104,143 @@ const checkPermissions = (req, res, next) => {
   }
 };
 
+// Read role to organization relaions 
+// app.get('/api/organizations/members', async (req, res) => {
+//   try {
+//     const token = await getBearerToken();
+//     const response = await axios.post(
+//       `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/read`,
+//       {
+
+//       },
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           'Content-Type': 'application/json'
+//         }
+//       }
+//     );
+
+//     // Process the response to group roles by organization
+//     const orgMap = new Map();
+
+//     response.data.tuples.forEach(tuple => {
+//       const orgId = tuple.key.object.replace('org:', '');
+//       const roleId = tuple.key.user.replace('role:', '');
+
+//       if (!orgMap.has(orgId)) {
+//         orgMap.set(orgId, new Set());
+//       }
+//       orgMap.get(orgId).add(roleId);
+//     });
+
+//     // Convert to array format
+//     const result = Array.from(orgMap.entries()).map(([orgId, roles]) => ({
+//       orgId,
+//       roles: Array.from(roles)
+//     }));
+
+//     // res.json(result);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error fetching organization members:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to fetch organization members',
+//       error: error.message
+//     });
+//   }
+// });
+
+app.post('/api/organizations/members', async (req, res) => {
+  const { orgId, orgRoleId } = req.body;
+  console.log(req.body);
+  if (!orgId || !orgRoleId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Organization ID and Role ID are required'
+    });
+  }
+
+  try {
+    const token = await getBearerToken();
+    await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
+      {
+        writes: {
+          tuple_keys: [{
+            user: `role:${orgRoleId}`,
+            relation: "member",
+            object: `org:${orgId}`
+          }]
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      message: 'Member added successfully'
+    });
+  } catch (error) {
+    console.error('Error adding member:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to add member',
+      error: error.message
+    });
+  }
+});
+
 // Organizations API endpoints
-app.get('/api/organizations', async (req, res) => {
-  try {
-    const response = await axios.post(
-      'https://usps-spa.workflows.oktapreview.com/api/flo/b24cec17923d893a2ec2c65c52aa9672/invoke',
-      {} // Add empty body for POST request
-    );
-    console.log(response);
-    if (!response.data || !response.data.values) {
-      throw new Error('Invalid response format from organizations API');
-    }
+// app.get('/api/organizations', async (req, res) => {
+//   try {
+//     const response = await axios.post(
+//       'https://usps-spa.workflows.oktapreview.com/api/flo/b24cec17923d893a2ec2c65c52aa9672/invoke',
+//       {} // Add empty body for POST request
+//     );
+//     console.log(response);
+//     if (!response.data || !response.data.values) {
+//       throw new Error('Invalid response format from organizations API');
+//     }
 
-    res.json(response.data.values);
-  } catch (error) {
-    console.error('Organizations API error:', error.message);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch organizations',
-      error: error.message,
-    });
-  }
-});
+//     res.json(response.data.values);
+//   } catch (error) {
+//     console.error('Organizations API error:', error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to fetch organizations',
+//       error: error.message,
+//     });
+//   }
+// });
 
-app.post('/api/organizations', async (req, res) => {
-  try {
-    const response = await axios.post(
-      'https://usps-spa.workflows.oktapreview.com/api/flo/d75dda1cddb48c5d84c6ad41f36058ca/invoke?clientToken=607dee9156f5a28931abd00cb23a397d5ff516c4bdc787e329df2b033c06f84f',
-      {}
-    );
+// app.post('/api/organizations', async (req, res) => {
+//   try {
+//     const response = await axios.post(
+//       'https://usps-spa.workflows.oktapreview.com/api/flo/d75dda1cddb48c5d84c6ad41f36058ca/invoke?clientToken=607dee9156f5a28931abd00cb23a397d5ff516c4bdc787e329df2b033c06f84f',
+//       {}
+//     );
 
-    if (!response.data) {
-      throw new Error('No data received from create organization API');
-    }
+//     if (!response.data) {
+//       throw new Error('No data received from create organization API');
+//     }
 
-    res.json(response.data);
-  } catch (error) {
-    console.error('Create organization error:', error.message);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create organization',
-      error: error.message,
-    });
-  }
-});
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Create organization error:', error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to create organization',
+//       error: error.message,
+//     });
+//   }
+// });
 
 // Okta Apps API endpoints
 app.get('/api/apps', async (req, res) => {

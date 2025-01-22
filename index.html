@@ -37,6 +37,9 @@
               <li class="nav-item">
                 <a href="/permissions" class="nav-link route-link">Permissions</a>
               </li>
+              <li class="nav-item">
+                <a href="/organizations" class="nav-link route-link">Organizations</a>
+              </li>
             </ul>
             <ul class="navbar-nav auth-invisible d-block">
               <!-- Login button: show if NOT authenticated -->
@@ -348,6 +351,43 @@
       </div>
     </div>
     <!-- End Apps Page -->
+
+    <div id="content-organizations" class="page hidden">
+      <h2 class="mb-4">Organizations Management</h2>
+
+      <!-- Add Member Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add Role to Organization</h5>
+          <form id="addMemberForm">
+            <div class="mb-3">
+              <label for="orgId" class="form-label">Organization ID</label>
+              <input type="text" class="form-control" id="orgId" name="orgId" required>
+            </div>
+            <div class="mb-3">
+              <label for="orgRoleId" class="form-label">Role ID</label>
+              <input type="text" class="form-control" id="orgRoleId" name="orgRoleId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Member</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Organizations Table -->
+      <div class="table-responsive">
+        <table id="organizationsTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Organization ID</th>
+              <th>Member Roles</th>
+            </tr>
+          </thead>
+          <tbody id="organizations-table-body">
+            <!-- Organizations will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <footer class="bg-light text-center p-5">
 
