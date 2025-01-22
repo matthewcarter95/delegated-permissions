@@ -5,7 +5,7 @@ import {
   appState,
   buttonState,
 } from "./providers";
-import { reportsService } from "./services";
+import { reportsService, reportFilesService } from "./services";
 import { isRouteLink, showContent, showContentFromUrl } from "./utils";
 
 const { BASE_URL } = import.meta.env;
@@ -281,9 +281,11 @@ document.addEventListener("DOMContentLoaded", () => {
  * Reports page
  */
 document.addEventListener("DOMContentLoaded", () => {
+  // forms
   const userRoleForm = document.getElementById("roleReportForm");
   const appAccessReportForm = document.getElementById("appAccessReportForm");
   const appRoleReportForm = document.getElementById("appRoleReportForm");
+
   if (userRoleForm) {
     userRoleForm.addEventListener(
       "submit",
@@ -300,6 +302,34 @@ document.addEventListener("DOMContentLoaded", () => {
     appRoleReportForm.addEventListener(
       "submit",
       reportsService.loadAppRoleAccess
+    );
+  }
+
+  // downloads
+  const downloadUserRoleData = document.getElementById(
+    "download-user-roles-data"
+  );
+  const downloadAppAccessData = document.getElementById(
+    "download-app-access-data"
+  );
+  const downloadAppRoleData = document.getElementById("download-app-role-data");
+
+  if (downloadUserRoleData) {
+    downloadUserRoleData.addEventListener(
+      "click",
+      reportFilesService.writeUserRolePermissionsReport
+    );
+  }
+  if (downloadAppAccessData) {
+    downloadAppAccessData.addEventListener(
+      "click",
+      reportFilesService.writeAppAccessReport
+    );
+  }
+  if (downloadAppRoleData) {
+    downloadAppRoleData.addEventListener(
+      "click",
+      reportFilesService.writeAppRoleReport
     );
   }
 });

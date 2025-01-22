@@ -121,7 +121,9 @@ async function loadAppAccessReport(event) {
 async function loadAppRoleAccess(event) {
   event.preventDefault();
 
-  const appId = document.getElementById("report_roleAppId").value;
+  const selectEle = document.getElementById("report_roleAppId");
+  const appId = selectEle.value;
+  const appName = selectEle.options[selectEle.selectedIndex].text;
 
   try {
     const response = await fetch(`/api/apps/${appId}/roles`);
@@ -133,6 +135,7 @@ async function loadAppRoleAccess(event) {
     roles.forEach((role) => {
       const row = modalBody.insertRow();
       row.innerHTML = `
+        <td>${appName}</td>
         <td>${role}</td>
       `;
     });
