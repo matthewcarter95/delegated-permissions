@@ -5,6 +5,7 @@ import {
   appState,
   buttonState,
 } from "./providers";
+import { reportsService, reportFilesService } from "./services";
 import { isRouteLink, showContent, showContentFromUrl } from "./utils";
 
 const { BASE_URL } = import.meta.env;
@@ -102,11 +103,18 @@ export const router = {
     loadPermissions();
   },
   "/reports": () => {
-    showContent("content-reports");
-    loadPermissions();
+    auth0?.allowRole(
+      () => {
+        showContent("content-reports");
+        reportsService.loadApplicationNames();
+      },
+      "ReportUser",
+      "/reports"
+    );
   },
 };
 
+/** Applicaitons Page */
 async function viewAppUsers(appId) {
   try {
     const response = await fetch(`/api/apps/${appId}/users`);
@@ -272,63 +280,57 @@ document.addEventListener("DOMContentLoaded", () => {
 /**
  * Reports page
  */
-// Add event listener for the permission assignment form
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("roleReportForm");
-  if (form) {
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+  // forms
+  const userRoleForm = document.getElementById("roleReportForm");
+  const appAccessReportForm = document.getElementById("appAccessReportForm");
+  const appRoleReportForm = document.getElementById("appRoleReportForm");
 
-      const role = document.getElementById("report_roleName").value;
+  if (userRoleForm) {
+    userRoleForm.addEventListener(
+      "submit",
+      reportsService.loadUserReportByRole
+    );
+  }
+  if (appAccessReportForm) {
+    appAccessReportForm.addEventListener(
+      "submit",
+      reportsService.loadAppAccessReport
+    );
+  }
+  if (appRoleReportForm) {
+    appRoleReportForm.addEventListener(
+      "submit",
+      reportsService.loadAppRoleAccess
+    );
+  }
 
-      try {
-        const response = await fetch("/api/getUsersByRole", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ role }),
-        });
+  // downloads
+  const downloadUserRoleData = document.getElementById(
+    "download-user-roles-data"
+  );
+  const downloadAppAccessData = document.getElementById(
+    "download-app-access-data"
+  );
+  const downloadAppRoleData = document.getElementById("download-app-role-data");
 
-        if (!response.ok) {
-          throw new Error("Failed to get users");
-        }
-
-        const data = await response.json();
-
-        // Process tuples to get user table
-        const userMap = new Map();
-
-        data.tuples.forEach((tuple) => {
-          const { key } = tuple;
-
-          const userId = key.user.replace("user:", "");
-          const roleId = key.object.replace("role:", "");
-
-          if (!userMap.has(userId)) {
-            userMap.set(userId, roleId);
-          }
-        });
-
-        const tableBody = document.getElementById("roles-table-body");
-        tableBody.innerHTML = ""; // Clear existing table content
-
-        // Convert the map to array and sort by userId ID
-        Array.from(userMap.entries())
-          .sort(([permA], [permB]) => permA.localeCompare(permB))
-          .forEach(([userId, role]) => {
-            const row = tableBody.insertRow();
-            const cell1 = row.insertCell(0);
-            const cell2 = row.insertCell(1);
-
-            cell1.textContent = userId;
-            cell2.textContent = role;
-          });
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        alert("Failed to fetch users. Please try again.");
-      }
-    });
+  if (downloadUserRoleData) {
+    downloadUserRoleData.addEventListener(
+      "click",
+      reportFilesService.writeUserRolePermissionsReport
+    );
+  }
+  if (downloadAppAccessData) {
+    downloadAppAccessData.addEventListener(
+      "click",
+      reportFilesService.writeAppAccessReport
+    );
+  }
+  if (downloadAppRoleData) {
+    downloadAppRoleData.addEventListener(
+      "click",
+      reportFilesService.writeAppRoleReport
+    );
   }
 });
 
