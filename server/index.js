@@ -1,17 +1,17 @@
-import * as dotenv from 'dotenv';
-import express from 'express';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import cors from 'cors';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
-import config from '../config.js';
-import jwt from 'jsonwebtoken';
-import axios from 'axios';
+import * as dotenv from "dotenv";
+import express from "express";
+import morgan from "morgan";
+import helmet from "helmet";
+import cors from "cors";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { existsSync } from "fs";
+import config from "../config.js";
+import jwt from "jsonwebtoken";
+import axios from "axios";
 
 export const loadEnv = (options) => {
-  if (existsSync('.env.local')) {
+  if (existsSync(".env.local")) {
     dotenv.config({ path: `.env.local`, ...options });
   }
 
@@ -27,11 +27,11 @@ const { auth, server } = config || {};
 
 const {
   SERVER_AUDIENCE: audience = server?.audience ??
-  auth?.audience ??
-  auth?.authorizationParams?.audience ??
-  'api://default',
+    auth?.audience ??
+    auth?.authorizationParams?.audience ??
+    "api://default",
   SERVER_AUTH_PERMISSIONS: AUTH_PERMISSIONS = server?.permissions || [
-    'AuthRocks',
+    "AuthRocks",
   ],
   OKTA_API_TOKEN,
   FGA_STORE_ID,
@@ -50,26 +50,26 @@ const {
 
 const permissions = Array.isArray(AUTH_PERMISSIONS)
   ? AUTH_PERMISSIONS
-  : AUTH_PERMISSIONS.split(' ');
+  : AUTH_PERMISSIONS.split(" ");
 
 const app = express();
 
-app.use(cors({ origin: '*' }));
-app.use(morgan('dev'));
+app.use(cors({ origin: "*" }));
+app.use(morgan("dev"));
 app.use(helmet());
-app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname, "public")));
 app.use(express.json());
 
 // Simple token extraction middleware
 const extractToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
       success: false,
-      message: 'No token provided',
+      message: "No token provided",
     });
   }
-  req.token = authHeader.split(' ')[1];
+  req.token = authHeader.split(" ")[1];
   next();
 };
 
@@ -80,7 +80,7 @@ const checkPermissions = (req, res, next) => {
     if (!decoded) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid token',
+        message: "Invalid token",
       });
     }
 
@@ -92,17 +92,18 @@ const checkPermissions = (req, res, next) => {
     if (!hasRequiredPermissions) {
       return res.status(403).json({
         success: false,
-        message: 'Insufficient permissions',
+        message: "Insufficient permissions",
       });
     }
     next();
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: 'Token verification failed',
+      message: "Token verification failed",
     });
   }
 };
+
 
 // Read role to organization relaions 
 // app.get('/api/organizations/members', async (req, res) => {
@@ -161,6 +162,7 @@ app.post('/api/organizations/members', async (req, res) => {
       message: 'Organization ID and Role ID are required'
     });
   }
+
 
   try {
     const token = await getBearerToken();
@@ -243,54 +245,54 @@ app.post('/api/organizations/members', async (req, res) => {
 // });
 
 // Okta Apps API endpoints
-app.get('/api/apps', async (req, res) => {
+app.get("/api/apps", async (req, res) => {
   try {
     const response = await axios.get(`${OKTA_ORG_URL}/api/v1/apps?q=WI`, {
       headers: {
         Authorization: `SSWS ${OKTA_API_TOKEN}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
     res.json(response.data);
   } catch (error) {
-    console.error('Apps API error:', error.message);
+    console.error("Apps API error:", error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch applications',
+      message: "Failed to fetch applications",
       error: error.message,
     });
   }
 });
 
-app.get('/api/apps/:appId/users', async (req, res) => {
+app.get("/api/apps/:appId/users", async (req, res) => {
   try {
     const response = await axios.get(
       `${OKTA_ORG_URL}/api/v1/apps/${req.params.appId}/users`,
       {
         headers: {
           Authorization: `SSWS ${OKTA_API_TOKEN}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
       }
     );
     res.json(response.data);
   } catch (error) {
-    console.error('App users API error:', error.message);
+    console.error("App users API error:", error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch application users',
+      message: "Failed to fetch application users",
       error: error.message,
     });
   }
 });
 
-app.get('/api/apps/:appId/roles', async (req, res) => {
+app.get("/api/apps/:appId/roles", async (req, res) => {
   const userTuple = {
     user: `application:${req.params.appId}`,
-    relation: 'assignedTo',
-    type: 'role'
+    relation: "assignedTo",
+    type: "role",
   };
 
   try {
@@ -298,14 +300,15 @@ app.get('/api/apps/:appId/roles', async (req, res) => {
     console.log(fgaResponse.objects);
     res.json(fgaResponse.objects);
   } catch (error) {
-    console.error('App roles API error:', error);
+    console.error("App roles API error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch application roles',
-      error: error.message || 'Unknown error occurred',
+      message: "Failed to fetch application roles",
+      error: error.message || "Unknown error occurred",
     });
   }
 });
+
 
 // Create App in Okta
 app.post('/api/apps', async (req, res) => {
@@ -404,33 +407,69 @@ app.get('/api/permissions', async (req, res) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
 
     if (!response.data) {
-      throw new Error('No data received from OpenFGA API');
+      throw new Error("No data received from OpenFGA API");
     }
 
     res.json(response.data);
   } catch (error) {
-    console.error('Permissions API error:', error);
+    console.error("Permissions API error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch permissions',
-      error: error.message || 'Unknown error occurred',
+      message: "Failed to fetch permissions",
+      error: error.message || "Unknown error occurred",
     });
   }
 });
 
-app.post('/api/permissions/assign', async (req, res) => {
+// List All Users By Role Type
+app.post("/api/getUsersByRole", async (req, res) => {
+  const { role } = req.body;
+  try {
+    const token = await getBearerToken();
+    const response = await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/read`,
+      {
+        tuple_key: {
+          object: `role:${role}`,
+          relation: "containedIn",
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.data) {
+      throw new Error("No data received from OpenFGA API");
+    }
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Permissions API error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch permissions",
+      error: error.message || "Unknown error occurred",
+    });
+  }
+});
+
+app.post("/api/permissions/assign", async (req, res) => {
   const { permissionId, roleId } = req.body;
-  console.log('Creating permission:', permissionId, roleId);
+  console.log("Creating permission:", permissionId, roleId);
   if (!permissionId || !roleId) {
     return res.status(400).json({
       success: false,
-      message: 'Permission ID and Role ID are required',
+      message: "Permission ID and Role ID are required",
     });
   }
 
@@ -450,21 +489,21 @@ app.post('/api/permissions/assign', async (req, res) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
 
     res.json({
       success: true,
-      message: 'Permission assigned successfully'
+      message: "Permission assigned successfully",
     });
   } catch (error) {
-    console.error('Permission assignment error:', error);
+    console.error("Permission assignment error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to assign permission',
-      error: error.message || 'Unknown error occurred',
+      message: "Failed to assign permission",
+      error: error.message || "Unknown error occurred",
     });
   }
 });
@@ -478,13 +517,13 @@ async function listObjects(userTuple) {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
     return response.data;
   } catch (error) {
-    console.error('Error listing objects:', error);
+    console.error("Error listing objects:", error);
     throw error;
   }
 }
@@ -499,13 +538,13 @@ async function readPermission(roleTuple) {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
     return response.data;
   } catch (error) {
-    console.error('Error listing permissions:', error);
+    console.error("Error listing permissions:", error);
     throw error;
   }
 }
@@ -515,12 +554,12 @@ async function getBearerToken() {
     const response = await axios.post('https://auth.fga.dev/oauth/token', {
       client_id: OPENFGA_CLIENT_ID,
       client_secret: OPENFGA_CLIENT_SECRET,
-      grant_type: 'client_credentials',
-      audience: 'https://api.us1.fga.dev/',
+      grant_type: "client_credentials",
+      audience: "https://api.us1.fga.dev/",
     });
     return response.data.access_token;
   } catch (error) {
-    console.error('Error getting bearer token:', error);
+    console.error("Error getting bearer token:", error);
     throw error;
   }
 }
