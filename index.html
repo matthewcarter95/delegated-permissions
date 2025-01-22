@@ -37,6 +37,8 @@
               <li class="nav-item">
                 <a href="/permissions" class="nav-link route-link">Permissions</a>
               </li>
+              <li class="nav-item hidden" id="reports-nav-item">
+                <a href="/reports" class="nav-link route-link">Reports</a>
               <li class="nav-item">
                 <a href="/organizations" class="nav-link route-link">Organizations</a>
               </li>
@@ -352,6 +354,48 @@
     </div>
     <!-- End Apps Page -->
 
+
+    <!-- Reports Page -->
+    <div id="content-reports" class="page hidden">
+      <h1 class="mb-4 h2">Reports</h1>
+
+      <!-- Get Report Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title h5">User Role Permissions Report</h2>
+          <form id="roleReportForm">
+            <div class="mb-3">
+              <label for="report_roleName" class="form-label">Role Name</label>
+              <input type="text" class="form-control" id="report_roleName" name="report_roleName" required>
+            </div>
+          <button type="submit" class="btn btn-primary">Get Report</button>
+          </form>
+        </div>
+      
+        <div class="card-body">
+          <h2 class="card-title h5">User Application Access Report</h2>
+          <form id="appAccessReportForm">
+            <div class="mb-3">
+              <label for="report_appName" class="form-label">Application Name</label>
+              <select class="form-control" id="report_appName" name="report_appName" required>
+                <option value="">--Please choose an option--</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Report</button>
+          </form>
+        </div>
+      </div>
+      
+        <div class="card-body">
+          <h2 class="card-title h5">Application Role Report</h2>
+          <form id="appRoleReportForm">
+            <div class="mb-3">
+              <label for="report_roleAppId" class="form-label">Application Name</label>
+              <select class="form-control" id="report_roleAppId" name="report_roleAppId" required>
+                <option value="">--Please choose an option--</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Report</button>
     <div id="content-organizations" class="page hidden">
       <h2 class="mb-4">Organizations Management</h2>
 
@@ -373,6 +417,163 @@
         </div>
       </div>
 
+
+      <!-- Modal for User Roles -->
+      <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="userRolesReportModalLabel">Report for Users by Role</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="card-body">
+                <button type="button" class="btn btn-primary mb-3" id="download-user-roles-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input class="form-control" type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
+
+              <!-- Roles Table -->
+              <table id="rolesTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="user-roles-report-table-body">
+                  <!-- Roles will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Application Access -->
+      <div class="modal fade" id="appAccessReportModal" tabindex="-1" aria-labelledby="appAccessReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="appAccessReportModalLabel">Application Access Report</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="card-body">
+                <button type="button" class="btn btn-primary mb-3" id="download-app-access-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input class="form-control" type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
+
+              <!-- Application Access Table -->
+              <table id="appAccessReportTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="app-access-report-table-body">
+                  <!-- Application Access will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Application Role Report -->
+      <div class="modal fade" id="appRoleReportModal" tabindex="-1" aria-labelledby="appRoleReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="appRoleReportModalLabel">Application Role Report</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="card-body">
+                <button type="button" class="btn btn-primary mb-3" id="download-app-role-data">Download Table</button>
+                
+                <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                <form class="schedule-delivery-form">
+                  <div class="mb-3">
+                    <label class="form-label">Delivery Schedule
+                      <select class="form-control" name="scheduleOption" required>
+                        <option value="">--Please choose an option--</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </label>
+                    <label class="form-label" name="deliveryDate">Start Date
+                      <input class="form-control" type="date" required>
+                    </label>
+                    <label class="form-label" name="email">Email Address
+                      <input class="form-control" type="email" required>
+                    </label>
+                  </div>
+                  <button type="submit"  class="btn btn-primary">Schedule Report</button>
+                </form>
+              </div>
+
+              <!-- Application Role Table -->
+              <table id="appRoleReportTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Application</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="app-role-report-table-body">
+                  <!-- Application Role Report will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--End Reports Page-->
+
       <!-- Organizations Table -->
       <div class="table-responsive">
         <table id="organizationsTable" class="table table-striped">
@@ -388,6 +589,7 @@
         </table>
       </div>
     </div>
+
 
     <footer class="bg-light text-center p-5">
 
