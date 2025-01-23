@@ -108,9 +108,7 @@
             <div id="challenge1Section" class="col mb-4">
               <label>
                 <p id="content-lead" class="lead">
-                  This is a single page application (public) that demonstrates an authorization code grant. You can
-                  expand the JSON below
-                  to see the ID Token. We will see the access token when we call the API.
+                  You can expand the JSON below to see the ID Token.
                 </p>
                 <details>
                   <summary>View JSON</summary>
@@ -119,27 +117,30 @@
                       </pre>
                 </details>
               </label>
-              <label>
+              <!-- <label>
                 <h5>Access token:</h5>
                 <pre>
                     <code id="ipt-access-token" class="json"></code>
                   </pre>
-              </label>
+              </label> -->
             </div>
             <!-- End Challenge 1: Token Section -->
 
             <!-- Begin Challenge 2: API Section -->
             <div id="challenge2Section" class="col mb-4">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title">Your Roles</h5>
+                  <p class="card-text user-roles"></p>
+                </div>
+              </div>
               <div>
-                <label>Test API</label>
-                <p>
-                  The API requires the permissions claim contain "AuthRocks"
-                  in the access token.
-                </p>
+
+
                 <div class="mb-5 d-flex justify-content-center">
                   <button id="scoped-api-btn" class="btn btn-primary mt-5">
                     <span class="spinner-grow spinner-grow-sm me-2 hidden" role="status" aria-hidden="true"></span>
-                    <span>Try API</span>
+                    <span>Request Additional Access</span>
                     <span class="hidden">Loading...</span>
                   </button>
                 </div>
@@ -213,14 +214,28 @@
             <form id="assignPermissionForm">
               <div class="mb-3">
                 <label for="permissionId" class="form-label">Permission ID</label>
-                <input type="text" class="form-control" id="permissionId" name="permissionId" required>
+                <input list="permissionOptions" class="form-control" id="permissionId" name="permissionId" required>
+                <datalist id="permissionOptions">
+                  <option value="view-reports"></option>
+                  <option value="create-reports"></option>
+                  <option value="edit-reports"></option>
+                  <option value="delete-reports"></option>
+                  <!-- Add more options as needed -->
+                </datalist>
               </div>
               <div class="mb-3">
                 <label for="roleId" class="form-label">Role ID</label>
-                <input type="text" class="form-control" id="roleId" name="roleId" required>
+                <input list="roleOptions" class="form-control" id="roleId" name="roleId" required>
+                <datalist id="roleOptions">
+                  <option value="operator"></option>
+                  <option value="admin"></option>
+                  <option value="developer"></option>
+                  <!-- Add more options as needed -->
+                </datalist>
               </div>
               <button type="submit" class="btn btn-primary">Assign Permission</button>
             </form>
+
           </div>
         </div>
 
@@ -622,12 +637,12 @@
               <input type="text" class="form-control" id="userId" name="userId" required>
             </div>
             <div class="mb-3">
-              <label for="groupId" class="form-label">Group</label>
+              <label for="groupId" class="form-label">Role</label>
               <select class="form-control" id="groupId" name="groupId" required>
                 <option value="">--Select a Group--</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">Assign to Group</button>
+            <button type="submit" class="btn btn-primary">Assign to Role</button>
           </form>
         </div>
       </div>
@@ -635,11 +650,16 @@
       <!-- Users Table -->
       <div class="table-responsive">
         <table id="usersTable" class="table table-striped">
+          <colgroup>
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 80%;">
+          </colgroup>
           <thead>
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
-              <th>Groups</th>
+              <th>TBD</th>
             </tr>
           </thead>
           <tbody id="users-table-body">

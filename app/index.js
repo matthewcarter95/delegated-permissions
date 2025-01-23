@@ -453,7 +453,7 @@ async function loadGroups() {
     const groups = await response.json();
 
     const groupSelect = document.getElementById('groupId');
-    groupSelect.innerHTML = '<option value="">--Select a Group--</option>';
+    groupSelect.innerHTML = '<option value="">--Select a Role--</option>';
 
     groups.forEach(group => {
       const option = document.createElement('option');

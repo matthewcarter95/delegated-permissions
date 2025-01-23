@@ -80,11 +80,6 @@ export const authStateProvider = new Proxy(authState, {
             .classList.remove("hidden");
         }
 
-        if (value?.approles?.includes("Java Developers")) {
-          document
-            .getElementById("actions-nav-item")
-            .classList.remove("hidden");
-        }
         break;
       default:
         break;
