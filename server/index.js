@@ -27,9 +27,9 @@ const { auth, server } = config || {};
 
 const {
   SERVER_AUDIENCE: audience = server?.audience ??
-    auth?.audience ??
-    auth?.authorizationParams?.audience ??
-    "api://default",
+  auth?.audience ??
+  auth?.authorizationParams?.audience ??
+  "api://default",
   SERVER_AUTH_PERMISSIONS: AUTH_PERMISSIONS = server?.permissions || [
     "AuthRocks",
   ],
@@ -463,6 +463,53 @@ app.post("/api/getUsersByRole", async (req, res) => {
   }
 });
 
+//Assign Action to Role
+app.post("/api/action/assign", async (req, res) => {
+  const { actionId, roleId } = req.body;
+  console.log("Creating action:", actionId, roleId);
+  if (!actionId || !roleId) {
+    return res.status(400).json({
+      success: false,
+      message: "Action ID and Role ID are required",
+    });
+  }
+
+  try {
+    const token = await getBearerToken();
+    await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
+      {
+        writes: {
+          tuple_keys: [{
+            user: `role:${roleId}`,
+            relation: 'parent',
+            object: `action:${actionId}`
+          }]
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "Action assigned successfully",
+    });
+  } catch (error) {
+    console.error("Action assignment error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to assign action",
+      error: error.message || "Unknown error occurred",
+    });
+  }
+});
+
+//Assign Permission to Role
 app.post("/api/permissions/assign", async (req, res) => {
   const { permissionId, roleId } = req.body;
   console.log("Creating permission:", permissionId, roleId);

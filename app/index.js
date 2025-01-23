@@ -245,9 +245,9 @@ async function loadOrganizations() {
     const tableBody = document.getElementById('organizations-table-body');
     tableBody.innerHTML = ''; // Clear existing table content
 
-    // Convert the map to array and sort by permission ID
+    // Convert the map to array and sort by organization ID
     Array.from(orgMap.entries())
-      .sort(([permA], [permB]) => permA.localeCompare(permB))
+      .sort(([orgA], [orgB]) => orgA.localeCompare(orgB))
       .forEach(([orgId, roles]) => {
         const row = tableBody.insertRow();
         const cell1 = row.insertCell(0);
@@ -257,21 +257,6 @@ async function loadOrganizations() {
         cell2.textContent = Array.from(roles).sort().join(', ');
       });
   } catch (error) {
-    // try {
-    //   const response = await fetch('/api/organizations/members');
-    //   const data = await response.json();
-
-    //   const tableBody = document.getElementById('organizations-table-body');
-    //   tableBody.innerHTML = '';
-
-    //   data.forEach(org => {
-    //     const row = tableBody.insertRow();
-    //     row.innerHTML = `
-    //       <td>${org.orgId}</td>
-    //       <td>${org.roles.join(', ')}</td>
-    //     `;
-    //   });
-    // } catch (error) {
     console.error('Error loading organizations:', error);
   }
 }
@@ -288,12 +273,9 @@ async function loadPermissions() {
       const { key } = tuple;
 
       // Only process containedIn relations for permissions
-
-
       if (key.relation === 'parent' && key.object.startsWith('permission:')) {
         const permissionId = key.object.replace('permission:', '');
         const roleId = key.user.replace('role:', '');
-
 
         if (!permissionMap.has(permissionId)) {
           permissionMap.set(permissionId, new Set());
@@ -326,13 +308,13 @@ async function loadActions() {
     const response = await fetch('/api/permissions');
     const data = await response.json();
 
-    // Process tuples to get permission-role mappings
+    // Process tuples to get action-role mappings
     const actionMap = new Map();
 
     data.tuples.forEach(tuple => {
       const { key } = tuple;
 
-      // Only process containedIn relations for permissions
+      // Only process parent relations for actions
       if (key.relation === 'parent' && key.object.startsWith('action:')) {
         const actionId = key.object.replace('action:', '');
         const roleId = key.user.replace('role:', '');
@@ -347,9 +329,9 @@ async function loadActions() {
     const tableBody = document.getElementById('actions-table-body');
     tableBody.innerHTML = ''; // Clear existing table content
 
-    // Convert the map to array and sort by permission ID
+    // Convert the map to array and sort by action ID
     Array.from(actionMap.entries())
-      .sort(([permA], [permB]) => permA.localeCompare(permB))
+      .sort(([actionA], [actionB]) => actionA.localeCompare(actionB))
       .forEach(([actionId, roles]) => {
         const row = tableBody.insertRow();
         const cell1 = row.insertCell(0);
@@ -359,7 +341,7 @@ async function loadActions() {
         cell2.textContent = Array.from(roles).sort().join(', ');
       });
   } catch (error) {
-    console.error('Failed to load actions:', error);
+    console.error('Error loading actions:', error);
   }
 }
 
@@ -470,6 +452,44 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Error adding member:', error);
         alert('Failed to add member. Please try again.');
+      }
+    });
+  }
+});
+
+// Add event listener for action assignment form
+document.addEventListener('DOMContentLoaded', () => {
+  const actionForm = document.getElementById('assignActionForm');
+  if (actionForm) {
+    actionForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const actionId = document.getElementById('actionId').value;
+      const roleId = document.getElementById('actionRoleId').value;
+
+      try {
+        const response = await fetch('/api/action/assign', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ actionId: actionId, roleId })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to assign action');
+        }
+
+        // Clear the form
+        actionForm.reset();
+
+        // Reload the actions table
+        await loadActions();
+
+        alert('Action assigned successfully!');
+      } catch (error) {
+        console.error('Error assigning action:', error);
+        alert('Failed to assign action. Please try again.');
       }
     });
   }

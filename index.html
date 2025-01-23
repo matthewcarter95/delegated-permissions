@@ -20,23 +20,17 @@
     <div class="nav-container sticky-top">
       <nav class="navbar navbar-expand navbar-light bg-light">
         <div class="container">
-          <div class="
-                navbar-expand
-                d-flex
-                w-100
-                align-items-center
-                justify-content-between
-              " id="navbarNav">
+          <div class="navbar-expand d-flex w-100 align-items-center justify-content-between" id="navbarNav">
             <ul class="navbar-nav mr-auto mx-3">
               <li class="nav-item">
                 <a href="/" class="nav-link route-link">Home</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item hidden" id="apps-nav-item">
                 <a href="/apps" class="nav-link route-link">Applications</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="/permissions" class="nav-link route-link">Permissions</a>
-              </li>
+              </li> -->
               <li class="nav-item hidden" id="reports-nav-item">
                 <a href="/reports" class="nav-link route-link">Reports</a>
               </li>
@@ -113,9 +107,6 @@
           <div class="row">
             <!-- Begin Challenge 1: Token Section -->
             <div id="challenge1Section" class="col mb-4">
-              <!-- <h4 class="mb-3">Challenge 1: Custom Application Sign-on</h4> -->
-
-
               <label>
                 <p id="content-lead" class="lead">
                   This is a single page application (public) that demonstrates an authorization code grant. You can
@@ -140,26 +131,7 @@
 
             <!-- Begin Challenge 2: API Section -->
             <div id="challenge2Section" class="col mb-4">
-              <!-- <h4 class="mb-3">Challenge 2: Protect The API</h4> -->
-
               <div>
-                <!-- <label>Public API</label>
-                  <p>
-                    The first API is available to any calls, even without
-                    authentication.
-                  </p>
-                  <div class="mb-5 d-flex justify-content-center">
-                    <button id="public-api-btn" class="btn btn-primary mt-5">
-                      <span class="spinner-grow spinner-grow-sm me-2 hidden" role="status"
-                        aria-hidden="true"></span><span>Try API</span><span class="hidden">Loading...</span>
-                    </button>
-                  </div>
-                  <div class="mb-5 d-flex justify-content-center">
-                    <button id="private-api-btn" class="btn btn-primary mt-5">
-                      <span class="spinner-grow spinner-grow-sm me-2 hidden" role="status"
-                        aria-hidden="true"></span><span>Try API</span><span class="hidden">Loading...</span>
-                    </button>
-                  </div> -->
                 <label>Test API</label>
                 <p>
                   The API requires the permissions claim contain "AuthRocks"
@@ -187,7 +159,6 @@
                 </div>
               </div>
             </div>
-
             <!-- End Challenge 2: API Section -->
           </div>
         </div>
@@ -196,15 +167,12 @@
       <div id="no-config" class="config-invisible">
         <h3 id="content-title" class="col my-5 text-center">
           <em>Please configure your app to continue.</em>
-          </h2>
+        </h3>
       </div>
 
       <div id="content-profile" class="page auth-visible auth-hidden hidden">
         <div class="container">
           <div class="row align-items-center profile-header">
-            <!-- <div class="col-md-2">
-                <img alt="User's profile picture" class="rounded-circle img-fluid profile-image mb-3 mb-md-0" />
-              </div> -->
             <div class="col-md">
               <h2 class="user-name"></h2>
               <p class="lead text-muted user-email"></p>
@@ -234,378 +202,379 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- Permissions Page -->
-    <div id="content-permissions" class="page hidden">
-      <h2 id="permissions-title" class="mb-4">Permissions Management</h2>
 
-      <!-- Create Permission Assignment Form -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Assign Permission to Role</h5>
-          <form id="assignPermissionForm">
-            <div class="mb-3">
-              <label for="permissionId" class="form-label">Permission ID</label>
-              <input type="text" class="form-control" id="permissionId" name="permissionId" required>
-            </div>
-            <div class="mb-3">
-              <label for="roleId" class="form-label">Role ID</label>
-              <input type="text" class="form-control" id="roleId" name="roleId" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Assign Permission</button>
-          </form>
+      <!-- Permissions Page -->
+      <div id="content-permissions" class="page hidden">
+        <h2 id="permissions-title" class="mb-4">Permissions Management</h2>
+
+        <!-- Create Permission Assignment Form -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Assign Permission to Role</h5>
+            <form id="assignPermissionForm">
+              <div class="mb-3">
+                <label for="permissionId" class="form-label">Permission ID</label>
+                <input type="text" class="form-control" id="permissionId" name="permissionId" required>
+              </div>
+              <div class="mb-3">
+                <label for="roleId" class="form-label">Role ID</label>
+                <input type="text" class="form-control" id="roleId" name="roleId" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Assign Permission</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Permissions Table -->
+        <div class="table-responsive">
+          <table id="permissionsTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Permission ID</th>
+                <th>Contained In Roles</th>
+              </tr>
+            </thead>
+            <tbody id="permissions-table-body">
+              <!-- Permissions will be populated here -->
+            </tbody>
+          </table>
         </div>
       </div>
+      <!--End Permissions Page-->
 
-      <!-- Permissions Table -->
-      <div class="table-responsive">
-        <table id="permissionsTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Permission ID</th>
-              <th>Contained In Roles</th>
-            </tr>
-          </thead>
-          <tbody id="permissions-table-body">
-            <!-- Permissions will be populated here -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <!--End Permissions Page-->
+      <!-- Apps Page -->
+      <div id="content-apps" class="page hidden">
+        <h2 class="mb-4">Applications Management</h2>
 
-    <!-- Apps Page -->
-    <div id="content-apps" class="page hidden">
-      <h2 class="mb-4">Applications Management</h2>
-
-      <!-- Add Application Form -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Create New Application</h5>
-          <form id="createAppForm">
-            <div class="mb-3">
-              <label for="appName" class="form-label">Application Name</label>
-              <input type="text" class="form-control" id="appName" name="appName" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Application</button>
-          </form>
+        <!-- Add Application Form -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Create New Application</h5>
+            <form id="createAppForm">
+              <div class="mb-3">
+                <label for="appName" class="form-label">Application Name</label>
+                <input type="text" class="form-control" id="appName" name="appName" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Create Application</button>
+            </form>
+          </div>
         </div>
-      </div>
 
-      <!-- Apps Table -->
-      <div class="table-responsive">
-        <table id="appsTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="apps-table-body">
-            <!-- Apps will be populated here -->
-          </tbody>
-        </table>
-      </div>
+        <!-- Apps Table -->
+        <div class="table-responsive">
+          <table id="appsTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="apps-table-body">
+              <!-- Apps will be populated here -->
+            </tbody>
+          </table>
+        </div>
 
-      <!-- Modal for Users -->
-      <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="usersModalLabel">Application Users</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal for Users -->
+        <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="usersModalLabel">Application Users</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Username</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-modal-body">
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="users-modal-body">
-                </tbody>
-              </table>
+          </div>
+        </div>
+
+        <!-- Modal for Roles -->
+        <div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="rolesModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="rolesModalLabel">Application Roles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                  <tbody id="roles-modal-body">
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- End Apps Page -->
 
-      <!-- Modal for Roles -->
-      <div class="modal fade" id="rolesModal" tabindex="-1" aria-labelledby="rolesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="rolesModalLabel">Application Roles</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                  </tr>
-                </thead>
-                <tbody id="roles-modal-body">
-                </tbody>
-                </tbody>
-              </table>
-            </div>
+      <!-- Reports Page -->
+      <div id="content-reports" class="page hidden">
+        <h1 class="mb-4 h2">Reports</h1>
+
+        <!-- Get Report Form -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title h5">User Role Permissions Report</h2>
+            <form id="roleReportForm">
+              <div class="mb-3">
+                <label for="report_roleName" class="form-label">Role Name</label>
+                <input type="text" class="form-control" id="report_roleName" name="report_roleName" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Get Report</button>
+            </form>
+          </div>
+
+          <div class="card-body">
+            <h2 class="card-title h5">User Application Access Report</h2>
+            <form id="appAccessReportForm">
+              <div class="mb-3">
+                <label for="report_appName" class="form-label">Application Name</label>
+                <select class="form-control" id="report_appName" name="report_appName" required>
+                  <option value="">--Please choose an option--</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Get Report</button>
+            </form>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- End Apps Page -->
-
-
-    <!-- Reports Page -->
-    <div id="content-reports" class="page hidden">
-      <h1 class="mb-4 h2">Reports</h1>
-
-      <!-- Get Report Form -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h2 class="card-title h5">User Role Permissions Report</h2>
-          <form id="roleReportForm">
-            <div class="mb-3">
-              <label for="report_roleName" class="form-label">Role Name</label>
-              <input type="text" class="form-control" id="report_roleName" name="report_roleName" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Get Report</button>
-          </form>
-        </div>
 
         <div class="card-body">
-          <h2 class="card-title h5">User Application Access Report</h2>
-          <form id="appAccessReportForm">
+          <h2 class="card-title h5">Application Role Report</h2>
+          <form id="appRoleReportForm">
             <div class="mb-3">
-              <label for="report_appName" class="form-label">Application Name</label>
-              <select class="form-control" id="report_appName" name="report_appName" required>
+              <label for="report_roleAppId" class="form-label">Application Name</label>
+              <select class="form-control" id="report_roleAppId" name="report_roleAppId" required>
                 <option value="">--Please choose an option--</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Get Report</button>
           </form>
         </div>
+
+        <!-- Modal for User Roles -->
+        <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userRolesReportModalLabel">Report for Users by Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="card-body">
+                  <button type="button" class="btn btn-primary mb-3" id="download-user-roles-data">Download
+                    Table</button>
+
+                  <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                  <form class="schedule-delivery-form">
+                    <div class="mb-3">
+                      <label class="form-label">Delivery Schedule
+                        <select class="form-control" name="scheduleOption" required>
+                          <option value="">--Please choose an option--</option>
+                          <option value="quarterly">Quarterly</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </label>
+                      <label class="form-label" name="deliveryDate">Start Date
+                        <input class="form-control" type="date" required>
+                      </label>
+                      <label class="form-label" name="email">Email Address
+                        <input class="form-control" type="email" required>
+                      </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Report</button>
+                  </form>
+                </div>
+
+                <!-- Roles Table -->
+                <table id="rolesTable" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody id="user-roles-report-table-body">
+                    <!-- Roles will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for Application Access -->
+        <div class="modal fade" id="appAccessReportModal" tabindex="-1" aria-labelledby="appAccessReportModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="appAccessReportModalLabel">Application Access Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="card-body">
+                  <button type="button" class="btn btn-primary mb-3" id="download-app-access-data">Download
+                    Table</button>
+
+                  <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                  <form class="schedule-delivery-form">
+                    <div class="mb-3">
+                      <label class="form-label">Delivery Schedule
+                        <select class="form-control" name="scheduleOption" required>
+                          <option value="">--Please choose an option--</option>
+                          <option value="quarterly">Quarterly</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </label>
+                      <label class="form-label" name="deliveryDate">Start Date
+                        <input class="form-control" type="date" required>
+                      </label>
+                      <label class="form-label" name="email">Email Address
+                        <input class="form-control" type="email" required>
+                      </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Report</button>
+                  </form>
+                </div>
+
+                <!-- Application Access Table -->
+                <table id="appAccessReportTable" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Username</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="app-access-report-table-body">
+                    <!-- Application Access will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for Application Role Report -->
+        <div class="modal fade" id="appRoleReportModal" tabindex="-1" aria-labelledby="appRoleReportModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="appRoleReportModalLabel">Application Role Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="card-body">
+                  <button type="button" class="btn btn-primary mb-3" id="download-app-role-data">Download
+                    Table</button>
+
+                  <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
+                  <form class="schedule-delivery-form">
+                    <div class="mb-3">
+                      <label class="form-label">Delivery Schedule
+                        <select class="form-control" name="scheduleOption" required>
+                          <option value="">--Please choose an option--</option>
+                          <option value="quarterly">Quarterly</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </label>
+                      <label class="form-label" name="deliveryDate">Start Date
+                        <input class="form-control" type="date" required>
+                      </label>
+                      <label class="form-label" name="email">Email Address
+                        <input class="form-control" type="email" required>
+                      </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Report</button>
+                  </form>
+                </div>
+
+                <!-- Application Role Table -->
+                <table id="appRoleReportTable" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Application</th>
+                      <th>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody id="app-role-report-table-body">
+                    <!-- Application Role Report will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <!--End Reports Page-->
 
-      <div class="card-body">
-        <h2 class="card-title h5">Application Role Report</h2>
-        <form id="appRoleReportForm">
-          <div class="mb-3">
-            <label for="report_roleAppId" class="form-label">Application Name</label>
-            <select class="form-control" id="report_roleAppId" name="report_roleAppId" required>
-              <option value="">--Please choose an option--</option>
-            </select>
+      <!-- Organizations Page -->
+      <div id="content-organizations" class="page hidden container mt-5">
+        <h2 class="mb-4">Organizations Management</h2>
+
+        <!-- Add Member Form -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Add Role to Organization</h5>
+            <form id="addMemberForm">
+              <div class="mb-3">
+                <label for="orgId" class="form-label">Organization ID</label>
+                <input type="text" class="form-control" id="orgId" name="orgId" required>
+              </div>
+              <div class="mb-3">
+                <label for="orgRoleId" class="form-label">Role ID</label>
+                <input type="text" class="form-control" id="orgRoleId" name="orgRoleId" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Member</button>
+            </form>
           </div>
-          <button type="submit" class="btn btn-primary">Get Report</button>
-          <div id="content-organizations" class="page hidden">
-            <h2 class="mb-4">Organizations Management</h2>
+        </div>
 
-            <!-- Add Member Form -->
-            <div class="card mb-4">
-              <div class="card-body">
-                <h5 class="card-title">Add Role to Organization</h5>
-                <form id="addMemberForm">
-                  <div class="mb-3">
-                    <label for="orgId" class="form-label">Organization ID</label>
-                    <input type="text" class="form-control" id="orgId" name="orgId" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="orgRoleId" class="form-label">Role ID</label>
-                    <input type="text" class="form-control" id="orgRoleId" name="orgRoleId" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Add Member</button>
-                </form>
-              </div>
-            </div>
-
-
-            <!-- Modal for User Roles -->
-            <div class="modal fade" id="userRolesReportModal" tabindex="-1" aria-labelledby="userRolesReportModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="userRolesReportModalLabel">Report for Users by Role</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-                    <div class="card-body">
-                      <button type="button" class="btn btn-primary mb-3" id="download-user-roles-data">Download
-                        Table</button>
-
-                      <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
-                      <form class="schedule-delivery-form">
-                        <div class="mb-3">
-                          <label class="form-label">Delivery Schedule
-                            <select class="form-control" name="scheduleOption" required>
-                              <option value="">--Please choose an option--</option>
-                              <option value="quarterly">Quarterly</option>
-                              <option value="monthly">Monthly</option>
-                            </select>
-                          </label>
-                          <label class="form-label" name="deliveryDate">Start Date
-                            <input class="form-control" type="date" required>
-                          </label>
-                          <label class="form-label" name="email">Email Address
-                            <input class="form-control" type="email" required>
-                          </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Schedule Report</button>
-                      </form>
-                    </div>
-
-                    <!-- Roles Table -->
-                    <table id="rolesTable" class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>User ID</th>
-                          <th>Role</th>
-                        </tr>
-                      </thead>
-                      <tbody id="user-roles-report-table-body">
-                        <!-- Roles will be populated here -->
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Modal for Application Access -->
-            <div class="modal fade" id="appAccessReportModal" tabindex="-1" aria-labelledby="appAccessReportModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="appAccessReportModalLabel">Application Access Report</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-                    <div class="card-body">
-                      <button type="button" class="btn btn-primary mb-3" id="download-app-access-data">Download
-                        Table</button>
-
-                      <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
-                      <form class="schedule-delivery-form">
-                        <div class="mb-3">
-                          <label class="form-label">Delivery Schedule
-                            <select class="form-control" name="scheduleOption" required>
-                              <option value="">--Please choose an option--</option>
-                              <option value="quarterly">Quarterly</option>
-                              <option value="monthly">Monthly</option>
-                            </select>
-                          </label>
-                          <label class="form-label" name="deliveryDate">Start Date
-                            <input class="form-control" type="date" required>
-                          </label>
-                          <label class="form-label" name="email">Email Address
-                            <input class="form-control" type="email" required>
-                          </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Schedule Report</button>
-                      </form>
-                    </div>
-
-                    <!-- Application Access Table -->
-                    <table id="appAccessReportTable" class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>User ID</th>
-                          <th>Username</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody id="app-access-report-table-body">
-                        <!-- Application Access will be populated here -->
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Modal for Application Role Report -->
-            <div class="modal fade" id="appRoleReportModal" tabindex="-1" aria-labelledby="appRoleReportModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="appRoleReportModalLabel">Application Role Report</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-                    <div class="card-body">
-                      <button type="button" class="btn btn-primary mb-3" id="download-app-role-data">Download
-                        Table</button>
-
-                      <h6 class="card-title h6">Schedule Report Delivery For Later</h6>
-                      <form class="schedule-delivery-form">
-                        <div class="mb-3">
-                          <label class="form-label">Delivery Schedule
-                            <select class="form-control" name="scheduleOption" required>
-                              <option value="">--Please choose an option--</option>
-                              <option value="quarterly">Quarterly</option>
-                              <option value="monthly">Monthly</option>
-                            </select>
-                          </label>
-                          <label class="form-label" name="deliveryDate">Start Date
-                            <input class="form-control" type="date" required>
-                          </label>
-                          <label class="form-label" name="email">Email Address
-                            <input class="form-control" type="email" required>
-                          </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Schedule Report</button>
-                      </form>
-                    </div>
-
-                    <!-- Application Role Table -->
-                    <table id="appRoleReportTable" class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>Application</th>
-                          <th>Role</th>
-                        </tr>
-                      </thead>
-                      <tbody id="app-role-report-table-body">
-                        <!-- Application Role Report will be populated here -->
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--End Reports Page-->
-
-          <!-- Organizations Table -->
-          <div class="table-responsive">
-            <table id="organizationsTable" class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Organization ID</th>
-                  <th>Member Roles</th>
-                </tr>
-              </thead>
-              <tbody id="organizations-table-body">
-                <!-- Organizations will be populated here -->
-              </tbody>
-            </table>
-          </div>
+        <!-- Organizations Table -->
+        <div class="table-responsive">
+          <table id="organizationsTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Organization ID</th>
+                <th>Member Roles</th>
+              </tr>
+            </thead>
+            <tbody id="organizations-table-body">
+              <!-- Organizations will be populated here -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Actions Page -->
-      <div id="content-actions" class="page hidden">
+      <div id="content-actions" class="page hidden container mt-5">
         <h2 class="mb-4">Actions Management</h2>
 
-        <!-- Create Actions-to_role Assignment Form -->
+        <!-- Create Actions-to-role Assignment Form -->
         <div class="card mb-4">
           <div class="card-body">
             <h5 class="card-title">Assign Actions to Role</h5>
@@ -615,10 +584,10 @@
                 <input type="text" class="form-control" id="actionId" name="actionId" required>
               </div>
               <div class="mb-3">
-                <label for="roleId" class="form-label">Role ID</label>
+                <label for="actionRoleId" class="form-label">Role ID</label>
                 <input type="text" class="form-control" id="actionRoleId" name="actionRoleId" required>
               </div>
-              <button type="submit" class="btn btn-primary">Assign Permission</button>
+              <button type="submit" class="btn btn-primary">Assign Action</button>
             </form>
           </div>
         </div>
@@ -638,18 +607,17 @@
           </table>
         </div>
       </div>
-      <!--End Actions Page-->
-
-      <footer class="bg-light text-center p-5">
-
-      </footer>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"></script>
-    <script type="module" src="main.js"></script>
+    <footer class="bg-light text-center p-5">
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script type="module" src="main.js"></script>
 </body>
 
 </html>

@@ -67,11 +67,17 @@ export const authStateProvider = new Proxy(authState, {
           value?.family_name || "";
         document.getElementById("user-email").innerText = value?.email || "";
 
-        // show/hide reports nav link based on role
+        // Show/hide nav links based on roles
         if (value?.approles?.includes("ReportUser")) {
           document
             .getElementById("reports-nav-item")
-            .classList["remove"]("hidden");
+            .classList.remove("hidden");
+        }
+
+        if (value?.approles?.includes("Application Owners")) {
+          document
+            .getElementById("apps-nav-item")
+            .classList.remove("hidden");
         }
 
         break;
