@@ -139,6 +139,17 @@ export const router = {
       '/actions'
     );
   },
+  '/users': () => {
+    auth0?.allowRole(
+      () => {
+        showContent("content-users");
+        loadUsers();
+        loadGroups(); // Load groups for the dropdown
+      },
+      "Application Owners",
+      "/users"
+    );
+  },
 };
 
 /** Applicaitons Page */
@@ -415,6 +426,46 @@ async function loadActions() {
   }
 }
 
+async function loadUsers() {
+  try {
+    const response = await fetch('/api/users');
+    const users = await response.json();
+
+    const tableBody = document.getElementById('users-table-body');
+    tableBody.innerHTML = ''; // Clear existing table content
+
+    users.forEach(user => {
+      const row = tableBody.insertRow();
+      row.innerHTML = `
+        <td>${user.profile.firstName || ''}</td>
+        <td>${user.profile.lastName || ''}</td>
+        <td>${user.profile.groups?.join(', ') || ''}</td>
+      `;
+    });
+  } catch (error) {
+    console.error('Error loading users:', error);
+  }
+}
+
+async function loadGroups() {
+  try {
+    const response = await fetch('/api/groups');
+    const groups = await response.json();
+
+    const groupSelect = document.getElementById('groupId');
+    groupSelect.innerHTML = '<option value="">--Select a Group--</option>';
+
+    groups.forEach(group => {
+      const option = document.createElement('option');
+      option.value = group.id;
+      option.textContent = group.profile.name;
+      groupSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error loading groups:', error);
+  }
+}
+
 // Add add-app form submission handler
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createAppForm');
@@ -560,6 +611,62 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Error assigning action:', error);
         alert('Failed to assign action. Please try again.');
+      }
+    });
+  }
+});
+
+// Add event listener for the group assignment form
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('assignGroupForm');
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const userId = document.getElementById('userId').value;
+      const groupId = document.getElementById('groupId').value;
+      const groupLabel = document.getElementById('groupId').options[document.getElementById('groupId').selectedIndex].text;
+
+      try {
+        // Assign user to group in Okta
+        const oktaResponse = await fetch('/api/users/assign-group', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId, groupId })
+        });
+
+        if (!oktaResponse.ok) {
+          throw new Error('Failed to assign group in Okta');
+        }
+
+        // Create relation in FGA
+        const fgaResponse = await fetch('/api/user/assign/role', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userOktaId: `${userId}`,
+            roleId: groupLabel
+          })
+        });
+
+        if (!fgaResponse.ok) {
+          throw new Error('Failed to create relation in FGA');
+        }
+
+        // Clear the form
+        form.reset();
+
+        // Reload the users table
+        await loadUsers();
+
+        alert('User assigned to group successfully!');
+      } catch (error) {
+        console.error('Error assigning user to group:', error);
+        alert('Failed to assign user to group. Please try again.');
       }
     });
   }

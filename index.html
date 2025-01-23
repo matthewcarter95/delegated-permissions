@@ -28,9 +28,9 @@
               <li class="nav-item hidden" id="apps-nav-item">
                 <a href="/apps" class="nav-link route-link">Applications</a>
               </li>
-              <!-- <li class="nav-item">
-                <a href="/permissions" class="nav-link route-link">Permissions</a>
-              </li> -->
+              <li class="nav-item">
+                <a href="/users" class="nav-link route-link">Users</a>
+              </li>
               <li class="nav-item hidden" id="reports-nav-item">
                 <a href="/reports" class="nav-link route-link">Reports</a>
               </li>
@@ -608,6 +608,46 @@
       </div>
     </div>
 
+    <!-- Users Page -->
+    <div id="content-users" class="page hidden">
+      <h2 class="mb-4">Users Management</h2>
+
+      <!-- Add User to Group Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Assign User to Group</h5>
+          <form id="assignGroupForm">
+            <div class="mb-3">
+              <label for="userId" class="form-label">User ID</label>
+              <input type="text" class="form-control" id="userId" name="userId" required>
+            </div>
+            <div class="mb-3">
+              <label for="groupId" class="form-label">Group</label>
+              <select class="form-control" id="groupId" name="groupId" required>
+                <option value="">--Select a Group--</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign to Group</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="table-responsive">
+        <table id="usersTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Groups</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body">
+            <!-- Users will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
     <footer class="bg-light text-center p-5">
     </footer>
   </div>

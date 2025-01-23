@@ -104,7 +104,63 @@ const checkPermissions = (req, res, next) => {
   }
 };
 
+// Get all groups from Okta labeled with WI
+app.get('/api/groups', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${OKTA_ORG_URL}/api/v1/groups`,
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('List groups error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to list groups',
+      error: error.response?.data || error.message
+    });
+  }
+});
 
+// Assign user to group
+app.post('/api/users/assign-group', async (req, res) => {
+  const { userId, groupId } = req.body;
+
+  if (!userId || !groupId) {
+    return res.status(400).json({
+      success: false,
+      message: 'User ID and Group ID are required'
+    });
+  }
+
+  try {
+    const response = await axios.put(
+      `${OKTA_ORG_URL}/api/v1/groups/${groupId}/users/${userId}`,
+      {},
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('Assign user to group error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to assign user to group',
+      error: error.response?.data || error.message
+    });
+  }
+});
 // Read role to organization relaions 
 // app.get('/api/organizations/members', async (req, res) => {
 //   try {
@@ -590,6 +646,53 @@ app.post("/api/action/assign", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to assign action",
+      error: error.message || "Unknown error occurred",
+    });
+  }
+});
+
+
+//Assign User to Role
+app.post("/api/user/assign/role", async (req, res) => {
+  const { userOktaId, roleId } = req.body;
+  console.log("Creating relation:", userOktaId, roleId);
+  if (!userOktaId || !roleId) {
+    return res.status(400).json({
+      success: false,
+      message: "userOktaId and Role ID are required",
+    });
+  }
+
+  try {
+    const token = await getBearerToken();
+    await axios.post(
+      `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
+      {
+        writes: {
+          tuple_keys: [{
+            user: `user:${userOktaId}`,
+            relation: 'containedIn',
+            object: `role:${roleId}`
+          }]
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "userOktaId assigned to role successfully",
+    });
+  } catch (error) {
+    console.error("userOktaId assignment error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to assign userOktaId to role",
       error: error.message || "Unknown error occurred",
     });
   }
