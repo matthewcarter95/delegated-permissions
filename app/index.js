@@ -130,9 +130,15 @@ export const router = {
     loadOrganizations();
   },
   '/actions': () => {
-    showContent('content-actions');
-    loadActions();
-  }
+    auth0?.allowRole(
+      () => {
+        showContent('content-actions');
+        loadActions();
+      },
+      'Java Developers',
+      '/actions'
+    );
+  },
 };
 
 /** Applicaitons Page */
@@ -206,6 +212,14 @@ async function loadApps() {
           <a href="/permissions?appName=${app.label}" class="btn btn-sm btn-primary">
             Manage Permissions
           </a>
+                 
+            <button onclick="window.deactivateApp('${app.id}')" class="btn btn-sm btn-warning me-2">
+              Deactivate
+            </button>
+            <button onclick="window.deleteApp('${app.id}')" class="btn btn-sm btn-danger">
+              Delete
+            </button>
+          
         </td>
       `;
     });
@@ -214,9 +228,65 @@ async function loadApps() {
   }
 }
 
+// Add new functions for app management
+async function deactivateApp(appId) {
+  if (!confirm('Are you sure you want to deactivate this application?')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/app/${appId}/deactivate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to deactivate application');
+    }
+
+    // Reload the apps table to show updated status
+    await loadApps();
+    alert('Application deactivated successfully');
+  } catch (error) {
+    console.error('Error deactivating application:', error);
+    alert('Failed to deactivate application. Please try again.');
+  }
+}
+
+async function deleteApp(appId) {
+  if (!confirm('Are you sure you want to delete this application? This action cannot be undone.')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/app/${appId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete application');
+    }
+
+    // Reload the apps table
+    await loadApps();
+    alert('Application deleted successfully');
+  } catch (error) {
+    console.error('Error deleting application:', error);
+    alert('Failed to delete application. Please try again.');
+  }
+}
+
+
 // Make functions available globally for onclick handlers
 window.viewAppUsers = viewAppUsers;
 window.viewAppRoles = viewAppRoles;
+window.deactivateApp = deactivateApp;
+window.deleteApp = deleteApp;
 // window.manageAppPermssions = manageAppPermssions;
 
 async function loadOrganizations() {

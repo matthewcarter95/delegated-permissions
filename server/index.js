@@ -308,7 +308,8 @@ app.get("/api/apps/:appId/roles", async (req, res) => {
     });
   }
 });
-//Disable Application in Okta
+
+//Deactivate Application in Okta
 app.post('/api/app/:appId/deactivate', async (req, res) => {
   if (!req.params.appId) {
     return res.status(400).json({
@@ -370,6 +371,31 @@ app.delete('/api/app/:appId', async (req, res) => {
     });
   }
 });
+
+//List Users from Okta
+app.get('/api/users', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${OKTA_ORG_URL}/api/v1/users`,
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('List users error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to list users',
+      error: error.response?.data || error.message
+    });
+  }
+});
+
 // Create App in Okta
 app.post('/api/apps', async (req, res) => {
   const { appName } = req.body;
