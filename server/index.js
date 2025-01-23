@@ -308,8 +308,68 @@ app.get("/api/apps/:appId/roles", async (req, res) => {
     });
   }
 });
+//Disable Application in Okta
+app.post('/api/app/:appId/deactivate', async (req, res) => {
+  if (!req.params.appId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Application ID is required'
+    });
+  }
+  try {
+    const response = await axios.post(
+      `${OKTA_ORG_URL}/api/v1/apps/${req.params.appId}/lifecycle/deactivate`,
+      {},
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('Disable application error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to disable application',
+      error: error.response?.data || error.message
+    });
+  }
+});
+
+//Delete Application in Okta
+app.delete('/api/app/:appId', async (req, res) => {
+  if (!req.params.appId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Application ID is required'
+    });
+  }
 
 
+  try {
+    const response = await axios.delete(
+      `${OKTA_ORG_URL}/api/v1/apps/${req.params.appId}`,
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('Delete application error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete application',
+      error: error.response?.data || error.message
+    });
+  }
+});
 // Create App in Okta
 app.post('/api/apps', async (req, res) => {
   const { appName } = req.body;
