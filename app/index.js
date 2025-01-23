@@ -95,20 +95,26 @@ export const router = {
     auth0?.requireAuth(() => showContent("content-profile"), "/profile"),
   "/login": () => login(),
   "/apps": () => {
-    showContent("content-apps");
-    loadApps();
+    auth0?.allowRole(
+      () => {
+        showContent("content-apps");
+        loadApps();
+      },
+      "Application Owners",
+      "/apps"
+    );
   },
   '/permissions': () => {
     showContent('content-permissions');
     // Get appId from URL query parameter
     const urlParams = new URLSearchParams(window.location.search);
-    const appId = urlParams.get('appId');
-    if (appId) {
-      document.getElementById('permissions-title').textContent = `Permission Management for ${appId}`;
+    // const appId = urlParams.get('appId');
+    const appName = urlParams.get('appName');
+    if (appName) {
+      document.getElementById('permissions-title').textContent = `Permission Management for ${appName}`;
     }
     loadPermissions();
   },
-
   "/reports": () => {
     auth0?.allowRole(
       () => {
@@ -119,7 +125,6 @@ export const router = {
       "/reports"
     );
   },
-
   '/organizations': () => {
     showContent('content-organizations');
     loadOrganizations();
@@ -128,7 +133,6 @@ export const router = {
     showContent('content-actions');
     loadActions();
   }
-
 };
 
 /** Applicaitons Page */
@@ -199,7 +203,7 @@ async function loadApps() {
           <button onclick="window.viewAppRoles('${app.id}')" class="btn btn-sm btn-primary">
             View Roles
           </button>
-          <a href="/permissions?appId=${app.id}" class="btn btn-sm btn-primary">
+          <a href="/permissions?appName=${app.label}" class="btn btn-sm btn-primary">
             Manage Permissions
           </a>
         </td>
