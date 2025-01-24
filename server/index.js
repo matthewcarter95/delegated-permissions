@@ -452,6 +452,30 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+//List Groups assigned to user
+app.get('/api/users/:userId/groups', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${OKTA_ORG_URL}/api/v1/users/${req.params.userId}/groups`,
+      {
+        headers: {
+          Authorization: `SSWS ${OKTA_API_TOKEN}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('List groups error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to list groups',
+      error: error.response?.data || error.message
+    });
+  }
+});
+
 // Create App in Okta
 app.post('/api/apps', async (req, res) => {
   const { appName } = req.body;
@@ -522,7 +546,6 @@ app.post('/api/apps', async (req, res) => {
 app.delete('/api/tuple', async (req, res) => {
   try {
     const token = await getBearerToken();
-    console.log(req.body);
     const response = await axios.post(
       `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
       req.body,
@@ -533,10 +556,8 @@ app.delete('/api/tuple', async (req, res) => {
         }
       }
     );
-
     res.json(response.data);
   } catch (error) {
-
   }
 });
 

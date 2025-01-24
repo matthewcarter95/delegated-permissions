@@ -128,12 +128,12 @@
 
             <!-- Begin Challenge 2: API Section -->
             <div id="challenge2Section" class="col mb-4">
-              <div class="card mb-4">
+              <!-- <div class="card mb-4">
                 <div class="card-body">
                   <h5 class="card-title">Your Roles</h5>
                   <p class="card-text user-roles"></p>
                 </div>
-              </div>
+              </div> -->
               <div>
 
 
@@ -633,8 +633,10 @@
           <h5 class="card-title">Assign User to Group</h5>
           <form id="assignGroupForm">
             <div class="mb-3">
-              <label for="userId" class="form-label">User ID</label>
-              <input type="text" class="form-control" id="userId" name="userId" required>
+              <label for="userId" class="form-label">User</label>
+              <select class="form-control" id="userId" name="userId" required>
+                <option value="">--Select a User--</option>
+              </select>
             </div>
             <div class="mb-3">
               <label for="groupId" class="form-label">Role</label>

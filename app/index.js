@@ -150,6 +150,7 @@ export const router = {
         showContent("content-users");
         loadUsers();
         loadGroups(); // Load groups for the dropdown
+        loadUserOptions();
       },
       "Application Owners",
       "/users"
@@ -512,6 +513,26 @@ async function loadGroups() {
     });
   } catch (error) {
     console.error('Error loading groups:', error);
+  }
+}
+
+// Add this function after loadGroups()
+async function loadUserOptions() {
+  try {
+    const response = await fetch('/api/users');
+    const users = await response.json();
+
+    const userSelect = document.getElementById('userId');
+    userSelect.innerHTML = '<option value="">--Select a User--</option>';
+
+    users.forEach(user => {
+      const option = document.createElement('option');
+      option.value = user.id;
+      option.textContent = user.profile.login;
+      userSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error loading users:', error);
   }
 }
 
