@@ -522,6 +522,7 @@ app.post('/api/apps', async (req, res) => {
 app.delete('/api/tuple', async (req, res) => {
   try {
     const token = await getBearerToken();
+    console.log(req.body);
     const response = await axios.post(
       `${OPENFGA_API_URL}/stores/${OPENFGA_STORE_ID}/write`,
       req.body,

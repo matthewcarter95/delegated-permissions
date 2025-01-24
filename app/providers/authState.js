@@ -66,6 +66,8 @@ export const authStateProvider = new Proxy(authState, {
         document.getElementById("user-family-name").innerText =
           value?.family_name || "";
         document.getElementById("user-email").innerText = value?.email || "";
+        // document.getElementById("user-approles").innerText = value?.approles?.join(", ") || "No roles assigned";
+
 
         // Show/hide nav links based on roles
         if (value?.approles?.includes("ReportUser")) {

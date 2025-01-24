@@ -90,7 +90,12 @@ export const onPopState = ({ state }) => {
 
 // URL mapping, from hash to a function that responds to that URL action
 export const router = {
-  "/": () => showContent("content-home"),
+  "/": () => {
+    showContent("content-home");
+    if (authState.isAuthenticated) {
+      document.getElementById("user-approles").innerText = value?.approles?.join(", ") || "No roles assigned";
+    }
+  },
   "/profile": () =>
     auth0?.requireAuth(() => showContent("content-profile"), "/profile"),
   "/login": () => login(),
@@ -298,6 +303,7 @@ window.viewAppUsers = viewAppUsers;
 window.viewAppRoles = viewAppRoles;
 window.deactivateApp = deactivateApp;
 window.deleteApp = deleteApp;
+window.deletePermission = deletePermission;
 // window.manageAppPermssions = manageAppPermssions;
 
 async function loadOrganizations() {
@@ -353,7 +359,7 @@ async function loadPermissions() {
     data.tuples.forEach((tuple) => {
       const { key } = tuple;
 
-      // Only process containedIn relations for permissions
+      // Only process parent relations for permissions
       if (key.relation === 'parent' && key.object.startsWith('permission:')) {
         const permissionId = key.object.replace('permission:', '');
         const roleId = key.user.replace('role:', '');
@@ -375,12 +381,54 @@ async function loadPermissions() {
         const row = tableBody.insertRow();
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
 
         cell1.textContent = permissionId;
         cell2.textContent = Array.from(roles).sort().join(", ");
+        cell3.innerHTML = `
+          <button onclick="deletePermission('${permissionId}', '${Array.from(roles)[0]}')" class="btn btn-danger btn-sm">
+            Delete
+          </button>
+        `;
       });
   } catch (error) {
     console.error("Failed to load permissions:", error);
+  }
+}
+
+// DeletePermission function
+async function deletePermission(permissionId, deleteRoleId) {
+  if (!confirm('Are you sure you want to delete this permission? This will remove all role assignments.')) {
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/tuple', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        deletes: {
+          tuple_keys: [{
+            user: 'role:deleteRoleId',
+            relation: 'parent',
+            object: `permission:${permissionId}`
+          }]
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete permission');
+    }
+
+    // Reload the permissions table
+    await loadPermissions();
+    alert('Permission deleted successfully');
+  } catch (error) {
+    console.error('Error deleting permission:', error);
+    alert('Failed to delete permission. Please try again.');
   }
 }
 
@@ -439,6 +487,7 @@ async function loadUsers() {
       row.innerHTML = `
         <td>${user.profile.firstName || ''}</td>
         <td>${user.profile.lastName || ''}</td>
+        <td>${user.profile.login || ''}</td>
         <td>${user.profile.groups?.join(', ') || ''}</td>
       `;
     });
