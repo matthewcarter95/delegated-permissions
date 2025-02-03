@@ -36,6 +36,7 @@ export const authStateProvider = new Proxy(authState, {
         }
         break;
       case "user":
+        // Update the full JSON display
         document
           .querySelectorAll(`[id^=${elementMapper[key]}]`)
           .forEach(
@@ -43,6 +44,7 @@ export const authStateProvider = new Proxy(authState, {
               (element.innerHTML = !value ? "" : JSON.stringify(value, null, 4))
           );
 
+        // Update profile elements
         eachElement(
           ".profile-image",
           (element) => (element.src = value?.picture || "")
@@ -66,17 +68,20 @@ export const authStateProvider = new Proxy(authState, {
         document.getElementById("user-family-name").innerText =
           value?.family_name || "";
         document.getElementById("user-email").innerText = value?.email || "";
-        // document.getElementById("user-approles").innerText = value?.approles?.join(", ") || "No roles assigned";
 
+        // Update roles display
+        const approles = value?.approles || [];
+        document.getElementById("user-approles").innerText =
+          approles.length > 0 ? approles.join(", ") : "No roles assigned";
 
         // Show/hide nav links based on roles
-        if (value?.approles?.includes("ReportUser")) {
+        if (approles.includes("ReportUser")) {
           document
             .getElementById("reports-nav-item")
             .classList.remove("hidden");
         }
 
-        if (value?.approles?.includes("Application Owners")) {
+        if (approles.includes("Application Owners")) {
           document
             .getElementById("apps-nav-item")
             .classList.remove("hidden");
